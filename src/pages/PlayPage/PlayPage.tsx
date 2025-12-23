@@ -4,12 +4,33 @@
  * Simple page for playing retro games using EmulatorJS.
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useLayoutEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useGameStore } from '@/stores';
 import { usePlaySession } from '@/hooks/useRecentlyPlayed';
 import { EmulatorContainer, EmulatorBezel, BrowserWarning } from '@/components/emulator';
 import styles from './PlayPage.module.css';
+
+/**
+ * Check if EmulatorJS has been previously loaded in this JS context.
+ * EmulatorJS uses `let` declarations that can't be redeclared, so we need
+ * a fresh page load if the script was already loaded.
+ */
+function checkEmulatorJsPreviouslyLoaded(): boolean {
+  if (typeof window === 'undefined') return false;
+  // Check for EmulatorJS internal state that persists between React navigations
+  return !!(
+    // @ts-expect-error - EmulatorJS internal
+    window.EJS_STORAGE ||
+    // @ts-expect-error - EmulatorJS internal
+    window.EJS_main ||
+    // @ts-expect-error - EmulatorJS internal
+    window.EJS_GameManager
+  );
+}
+
+// Track if we've already checked for reload to avoid infinite loops
+let hasCheckedForReload = false;
 
 /**
  * PlayPage - Main game playing interface
@@ -32,6 +53,20 @@ export function PlayPage() {
   const [, setIsEmulatorReady] = useState(false);
   const [browserWarningDismissed, setBrowserWarningDismissed] = useState(false);
   const [shouldShowEmulator, setShouldShowEmulator] = useState(false);
+
+  // Force page reload if EmulatorJS was previously loaded in this JS context
+  // This is necessary because EmulatorJS uses `let` declarations that can't be redeclared
+  useLayoutEffect(() => {
+    // Only check once per page session to avoid infinite reload loops
+    if (hasCheckedForReload) return;
+    hasCheckedForReload = true;
+
+    if (checkEmulatorJsPreviouslyLoaded()) {
+      console.log('[PlayPage] EmulatorJS previously loaded, forcing page reload for fresh context');
+      // Use location.reload() to get a fresh JS context
+      window.location.reload();
+    }
+  }, []);
 
   // Update document title
   useEffect(() => {
