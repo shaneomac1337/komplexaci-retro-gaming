@@ -149,11 +149,10 @@ function EmulatorBezelComponent({
         <div className={styles.bottomCenter}>
           <div className={styles.controlHints}>
             <div className={styles.keyboardHelp}>
-              <span className={styles.keyHint}><kbd>WASD</kbd> D-Pad</span>
-              <span className={styles.keyHint}><kbd>J</kbd><kbd>K</kbd><kbd>L</kbd><kbd>I</kbd> Buttons</span>
+              <span className={styles.keyHint}><kbd>↑↓←→</kbd> D-Pad</span>
+              <span className={styles.keyHint}><kbd>A</kbd><kbd>S</kbd><kbd>Z</kbd><kbd>X</kbd> Buttons</span>
               <span className={styles.keyHint}><kbd>Enter</kbd> Start</span>
               <span className={styles.keyHint}><kbd>ESC</kbd> Menu</span>
-              <span className={styles.keyHint}><kbd>F</kbd> Fullscreen</span>
             </div>
           </div>
         </div>
