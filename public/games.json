@@ -1,7 +1,23 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-12-22T00:00:00Z",
+  "lastUpdated": "2025-12-23T00:00:00Z",
   "games": [
+    {
+      "id": "ps1-crash-bash",
+      "title": "Crash Bash",
+      "console": "ps1",
+      "romPath": "https://cdn.komplexaci.cz/roms/ps1/crash-bash.chd",
+      "coverPath": "covers/ps1/crash-bash.jpg",
+      "description": "Crash Bandicoot's first party game! Compete in wacky mini-games with friends or battle against Uka Uka's team.",
+      "releaseYear": 2000,
+      "genre": "party",
+      "players": 4,
+      "region": "US",
+      "developer": "Eurocom",
+      "publisher": "Sony Computer Entertainment",
+      "tags": ["party", "multiplayer", "crash-bandicoot"],
+      "addedAt": "2025-12-23T00:00:00Z"
+    },
     {
       "id": "ps1-smackdown-2",
       "title": "WWF SmackDown! 2: Know Your Role",
@@ -36,9 +52,9 @@
     }
   ],
   "metadata": {
-    "totalGames": 2,
+    "totalGames": 3,
     "byConsole": {
-      "ps1": 2
+      "ps1": 3
     },
     "description": "Curated collection of classic retro games"
   }
