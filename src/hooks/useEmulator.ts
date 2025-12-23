@@ -15,6 +15,14 @@ import type { Game, ConsoleType, EmulatorCore } from '@/types';
  */
 const CDN_BASE_URL = 'https://cdn.emulatorjs.org/latest/data/';
 
+/**
+ * Global flag to track if EmulatorJS script has been loaded
+ * This prevents the "redeclaration of let EJS_STORAGE" error
+ */
+let emulatorJsLoaded = false;
+let emulatorJsLoading = false;
+let emulatorJsLoadPromise: Promise<void> | null = null;
+
 
 /**
  * Mapping from our console types to EmulatorJS core names
@@ -251,15 +259,9 @@ export function useEmulator(
       }
     }
 
-    // Remove script element
-    if (scriptRef.current && scriptRef.current.parentNode) {
-      scriptRef.current.parentNode.removeChild(scriptRef.current);
-      scriptRef.current = null;
-    }
-
-    // Remove ALL EmulatorJS scripts from the page
-    const existingScripts = document.querySelectorAll('script[src*="emulatorjs"]');
-    existingScripts.forEach((script) => script.remove());
+    // NOTE: Do NOT remove EmulatorJS script - it causes "redeclaration of let EJS_STORAGE" error
+    // when the script is loaded again. The script should stay loaded once added.
+    scriptRef.current = null;
 
     // Restore original canvas getContext if we overrode it
     if (originalGetContextRef.current) {
@@ -289,12 +291,8 @@ export function useEmulator(
       window.EJS_onSaveState = undefined;
       window.EJS_onLoadState = undefined;
       window.EJS_emulator = undefined;
-      // @ts-expect-error - Cleaning up EmulatorJS internal state
-      delete window.EJS_STORAGE;
-      // @ts-expect-error - Cleaning up EmulatorJS internal state
-      delete window.EJS_main;
-      // @ts-expect-error - Cleaning up EmulatorJS internal state
-      delete window.EJS_GameManager;
+      // NOTE: Do NOT delete EJS_STORAGE, EJS_main, EJS_GameManager
+      // These are internal EmulatorJS state that should persist to avoid redeclaration errors
     }
 
     // Clear container content
@@ -350,27 +348,15 @@ export function useEmulator(
       // Increment initialization ID to invalidate any pending operations from previous init
       const currentInitId = ++initializationIdRef.current;
 
-      // Remove any existing EmulatorJS scripts to prevent "already declared" errors
-      const existingScripts = document.querySelectorAll('script[src*="emulatorjs"]');
-      existingScripts.forEach((script) => script.remove());
-
-      // Also remove any EmulatorJS style elements that may have been injected
-      const existingStyles = document.querySelectorAll('style[data-ejs]');
-      existingStyles.forEach((style) => style.remove());
-
-      // Clear any existing EmulatorJS global state to allow fresh initialization
-      if (typeof window !== 'undefined') {
-        // @ts-expect-error - Cleaning up EmulatorJS internal state
-        delete window.EJS_STORAGE;
-        // @ts-expect-error - Cleaning up EmulatorJS internal state
-        delete window.EJS_main;
-        // @ts-expect-error - Cleaning up EmulatorJS internal state
-        delete window.EJS_GameManager;
+      // Clear the player container but DON'T remove the EmulatorJS script
+      // Removing and re-adding the script causes "redeclaration of let EJS_STORAGE" error
+      const playerElement = document.getElementById('emulator-player');
+      if (playerElement) {
+        playerElement.innerHTML = '';
       }
 
       // Small delay to ensure cleanup is complete before reinitializing
-      // This helps with React StrictMode double-mounting
-      await new Promise((resolve) => setTimeout(resolve, 50));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Check if this initialization is still current (not superseded by another init)
       if (currentInitId !== initializationIdRef.current || !isMountedRef.current) {
@@ -544,20 +530,72 @@ export function useEmulator(
           callbacksRef.current.onLoadState?.();
         };
 
-        // Load EmulatorJS script
-        const script = document.createElement('script');
-        script.src = `${CDN_BASE_URL}loader.js`;
-        script.async = true;
+        // Load EmulatorJS script - only once to prevent "redeclaration of let EJS_STORAGE" error
+        if (emulatorJsLoaded) {
+          // Script already loaded - need to reinitialize EmulatorJS
+          // EmulatorJS doesn't have a clean reinit API, so we need a workaround
+          console.log('[EJS] Script already loaded, attempting reinitialize...');
 
-        script.onerror = () => {
-          const errorMessage = 'Failed to load EmulatorJS script';
-          setError(errorMessage);
-          setIsLoading(false);
-          callbacksRef.current.onError?.(errorMessage);
-        };
+          // Try to use existing emulator or wait for it to reinitialize
+          // EmulatorJS should pick up the new config when the player element is recreated
+          const checkReady = () => {
+            if (!isMountedRef.current || currentInitId !== initializationIdRef.current) return;
 
-        document.body.appendChild(script);
-        scriptRef.current = script;
+            if (window.EJS_emulator) {
+              console.log('[EJS] Emulator instance found');
+              setIsLoading(false);
+              setIsReady(true);
+              callbacksRef.current.onReady?.();
+            } else {
+              // EmulatorJS may need more time - the fallback detection in EmulatorContainer will help
+              console.log('[EJS] Waiting for emulator instance...');
+            }
+          };
+
+          // Give EmulatorJS time to initialize with new config
+          setTimeout(checkReady, 1000);
+          setTimeout(checkReady, 2500);
+          setTimeout(checkReady, 5000);
+        } else if (emulatorJsLoading) {
+          // Script is currently loading, wait for it
+          console.log('[EJS] Script is loading, waiting...');
+          emulatorJsLoadPromise?.then(() => {
+            if (!isMountedRef.current || currentInitId !== initializationIdRef.current) return;
+            if (window.EJS_emulator) {
+              setIsLoading(false);
+              setIsReady(true);
+              callbacksRef.current.onReady?.();
+            }
+          });
+        } else {
+          // First time loading the script
+          emulatorJsLoading = true;
+
+          emulatorJsLoadPromise = new Promise<void>((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = `${CDN_BASE_URL}loader.js`;
+            script.async = true;
+
+            script.onload = () => {
+              emulatorJsLoaded = true;
+              emulatorJsLoading = false;
+              console.log('[EJS] Script loaded successfully');
+              resolve();
+            };
+
+            script.onerror = () => {
+              emulatorJsLoading = false;
+              const errorMessage = 'Failed to load EmulatorJS script. Please refresh the page to retry.';
+              setError(errorMessage);
+              setIsLoading(false);
+              callbacksRef.current.onError?.(errorMessage);
+              reject(new Error(errorMessage));
+            };
+
+            document.body.appendChild(script);
+            scriptRef.current = script;
+          });
+        }
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Unknown error initializing emulator';
         setError(errorMessage);
@@ -691,19 +729,17 @@ export function useEmulator(
       isMountedRef.current = false;
       isCleaningUpRef.current = true;
 
-      // Remove script element
-      if (scriptRef.current && scriptRef.current.parentNode) {
-        scriptRef.current.parentNode.removeChild(scriptRef.current);
-        scriptRef.current = null;
-      }
+      // NOTE: Do NOT remove EmulatorJS script on unmount
+      // This causes "redeclaration of let EJS_STORAGE" error on remount
+      scriptRef.current = null;
 
-      // Clean up global EmulatorJS variables
+      // Clean up callbacks but preserve internal EJS state
       if (typeof window !== 'undefined') {
         window.EJS_ready = undefined;
         window.EJS_onGameStart = undefined;
         window.EJS_onSaveState = undefined;
         window.EJS_onLoadState = undefined;
-        window.EJS_emulator = undefined;
+        // Don't clear EJS_emulator - let EmulatorJS manage its own lifecycle
       }
 
       isInitializedRef.current = false;
