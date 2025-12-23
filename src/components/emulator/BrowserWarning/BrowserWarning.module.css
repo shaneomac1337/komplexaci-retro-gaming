@@ -1,0 +1,262 @@
+/**
+ * BrowserWarning Styles
+ * Warning modal for Firefox users with audio compatibility issues
+ */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal {
+  position: relative;
+  max-width: 480px;
+  width: 90%;
+  padding: 32px;
+  background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%);
+  border-radius: 16px;
+  border: 1px solid #333;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 25px 50px rgba(0, 0, 0, 0.5),
+    0 0 100px rgba(255, 165, 0, 0.1);
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Warning icon */
+.iconWrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.warningIcon {
+  width: 64px;
+  height: 64px;
+  color: #ffa500;
+  filter: drop-shadow(0 0 20px rgba(255, 165, 0, 0.5));
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Title */
+.title {
+  margin: 0 0 24px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  color: #ffffff;
+  letter-spacing: 1px;
+}
+
+/* Content */
+.content {
+  margin-bottom: 28px;
+}
+
+.mainMessage {
+  margin: 0 0 20px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #b0b0b0;
+  text-align: center;
+}
+
+.highlight {
+  color: #ff6b35;
+  font-weight: 600;
+}
+
+.issue {
+  color: #ff4444;
+  font-weight: 600;
+}
+
+/* Recommendation box */
+.recommendation {
+  padding: 16px;
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.recommendLabel {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #00ff88;
+  margin-bottom: 8px;
+}
+
+.recommendText {
+  margin: 0;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 15px;
+  color: #e0e0e0;
+}
+
+.recommendText strong {
+  color: #00ff88;
+}
+
+/* Technical note */
+.technicalNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.infoIcon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: #555;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.continueButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  padding: 16px 24px;
+  background: linear-gradient(180deg, #2a2a4a 0%, #1a1a3a 100%);
+  border: 1px solid #444;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.continueButton:hover {
+  background: linear-gradient(180deg, #3a3a5a 0%, #2a2a4a 100%);
+  border-color: #00ffff;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+}
+
+.buttonText {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #00ffff;
+  letter-spacing: 1px;
+}
+
+.buttonSubtext {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 11px;
+  color: #666;
+}
+
+.backButton {
+  width: 100%;
+  padding: 12px 24px;
+  background: transparent;
+  border: 1px solid #333;
+  border-radius: 8px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #888;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.backButton:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: #555;
+  color: #aaa;
+}
+
+/* Firefox badge */
+.firefoxBadge {
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: linear-gradient(180deg, #ff6b35 0%, #e55a25 100%);
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+}
+
+.firefoxIcon {
+  width: 16px;
+  height: 16px;
+  color: #ffffff;
+}
+
+.firefoxBadge span {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .modal {
+    padding: 24px 20px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+
+  .mainMessage {
+    font-size: 14px;
+  }
+
+  .warningIcon {
+    width: 48px;
+    height: 48px;
+  }
+}

@@ -8,7 +8,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useGameStore } from '@/stores';
 import { usePlaySession } from '@/hooks/useRecentlyPlayed';
-import { EmulatorContainer, EmulatorBezel } from '@/components/emulator';
+import { EmulatorContainer, EmulatorBezel, BrowserWarning } from '@/components/emulator';
 import styles from './PlayPage.module.css';
 
 /**
@@ -30,6 +30,8 @@ export function PlayPage() {
 
   // Local state
   const [, setIsEmulatorReady] = useState(false);
+  const [browserWarningDismissed, setBrowserWarningDismissed] = useState(false);
+  const [shouldShowEmulator, setShouldShowEmulator] = useState(false);
 
   // Update document title
   useEffect(() => {
@@ -77,6 +79,18 @@ export function PlayPage() {
     navigate('/browse');
   }, [navigate]);
 
+  // Handle browser warning dismiss (go back)
+  const handleBrowserWarningDismiss = useCallback(() => {
+    setBrowserWarningDismissed(true);
+    navigate('/browse');
+  }, [navigate]);
+
+  // Handle browser warning continue
+  const handleBrowserWarningContinue = useCallback(() => {
+    setBrowserWarningDismissed(true);
+    setShouldShowEmulator(true);
+  }, []);
+
   // Show loading state if game not yet loaded
   if (!game) {
     return (
@@ -84,6 +98,18 @@ export function PlayPage() {
         <div className={styles.loadingSpinner} aria-hidden="true" />
         <p>Loading game...</p>
         <span className="sr-only">Loading game, please wait...</span>
+      </div>
+    );
+  }
+
+  // Show browser warning for Firefox users before loading emulator
+  if (!browserWarningDismissed && !shouldShowEmulator) {
+    return (
+      <div className={styles.playSimple}>
+        <BrowserWarning
+          onDismiss={handleBrowserWarningDismiss}
+          onContinue={handleBrowserWarningContinue}
+        />
       </div>
     );
   }

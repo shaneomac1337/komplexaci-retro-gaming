@@ -464,8 +464,50 @@ export function useEmulator(
           } as typeof HTMLCanvasElement.prototype.getContext;
         }
 
-        // NOTE: EJS_defaultControls removed - was causing "Cannot read properties of undefined"
-        // error in EmulatorJS setupKeys. Button remapping can be done through EmulatorJS settings menu instead.
+        // Configure default gamepad button mappings for PlayStation layout
+        // EmulatorJS uses RetroArch/SNES button naming internally:
+        //   Index 0 = B (PS Cross ✕)   |  Index 8 = A (PS Circle ○)
+        //   Index 1 = Y (PS Square □)  |  Index 9 = X (PS Triangle △)
+        // EmulatorJS gamepad button mapping (1-indexed):
+        //   BUTTON_1 = Cross  |  BUTTON_2 = Circle  |  BUTTON_3 = Square  |  BUTTON_4 = Triangle
+        window.EJS_defaultControls = {
+          0: { // Player 1
+            // Face buttons - map gamepad buttons to correct RetroArch indices
+            0: { value: 'z', value2: 'BUTTON_1' },  // B / Cross ✕
+            1: { value: 'a', value2: 'BUTTON_3' },  // Y / Square □
+            8: { value: 'x', value2: 'BUTTON_2' },  // A / Circle ○
+            9: { value: 's', value2: 'BUTTON_4' },  // X / Triangle △
+            // D-Pad
+            4: { value: 'up arrow', value2: 'DPAD_UP' },
+            5: { value: 'down arrow', value2: 'DPAD_DOWN' },
+            6: { value: 'left arrow', value2: 'DPAD_LEFT' },
+            7: { value: 'right arrow', value2: 'DPAD_RIGHT' },
+            // Start / Select
+            2: { value: 'shift', value2: 'SELECT' },
+            3: { value: 'enter', value2: 'START' },
+            // Shoulder buttons
+            10: { value: 'q', value2: 'LEFT_TOP_SHOULDER' },    // L1
+            11: { value: 'e', value2: 'RIGHT_TOP_SHOULDER' },   // R1
+            12: { value: 'tab', value2: 'LEFT_BOTTOM_SHOULDER' }, // L2
+            13: { value: 'r', value2: 'RIGHT_BOTTOM_SHOULDER' }, // R2
+            // Stick buttons
+            14: { value: '', value2: 'LEFT_STICK' },  // L3
+            15: { value: '', value2: 'RIGHT_STICK' }, // R3
+            // Left analog stick
+            16: { value: 'd', value2: 'LEFT_STICK_X:+1' },
+            17: { value: 'g', value2: 'LEFT_STICK_X:-1' },
+            18: { value: 'v', value2: 'LEFT_STICK_Y:+1' },
+            19: { value: 'b', value2: 'LEFT_STICK_Y:-1' },
+            // Right analog stick
+            20: { value: 'l', value2: 'RIGHT_STICK_X:+1' },
+            21: { value: 'j', value2: 'RIGHT_STICK_X:-1' },
+            22: { value: 'k', value2: 'RIGHT_STICK_Y:+1' },
+            23: { value: 'i', value2: 'RIGHT_STICK_Y:-1' },
+          },
+          1: {}, // Player 2 - use defaults
+          2: {}, // Player 3 - use defaults
+          3: {}, // Player 4 - use defaults
+        };
 
         // Set BIOS URL if required
         if (consoleConfig.requiresBios && consoleConfig.biosFiles?.length) {

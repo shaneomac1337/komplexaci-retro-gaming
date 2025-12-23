@@ -55,3 +55,7 @@ export { useQuickSaveIndicator } from '@/hooks/useQuickSaveIndicator';
 // Emulator Keyboard Help
 export { EmulatorKeyboardHelp } from './EmulatorKeyboardHelp';
 export type { EmulatorKeyboardHelpProps } from './EmulatorKeyboardHelp';
+
+// Browser Warning
+export { BrowserWarning } from './BrowserWarning';
+export type { BrowserWarningProps } from './BrowserWarning';

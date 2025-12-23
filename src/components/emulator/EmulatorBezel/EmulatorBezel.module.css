@@ -5,6 +5,7 @@
 
 .bezel {
   --accent-color: #00ffff;
+  --secondary-color: #006666;
   --bezel-bg: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 50%, #1a1a2e 100%);
   --bezel-surface: #16162a;
   --bezel-dark: #0a0a14;
@@ -18,14 +19,61 @@
   box-shadow:
     0 0 0 2px var(--bezel-dark),
     0 0 0 4px var(--bezel-surface),
+    0 0 0 6px var(--secondary-color),
     0 0 40px rgba(0, 0, 0, 0.8),
-    0 0 20px color-mix(in srgb, var(--accent-color) 30%, transparent), /* Glow moved here from filter */
+    0 0 20px color-mix(in srgb, var(--accent-color) 30%, transparent),
     inset 0 2px 0 var(--bezel-highlight),
     inset 0 -2px 0 var(--bezel-shadow);
 
   /* NOTE: Removed filter: drop-shadow() because it creates a containing block
      that breaks EmulatorJS settings popup positioning. Using box-shadow instead. */
 }
+
+/* ============================================
+   DECORATIVE SCREWS
+   ============================================ */
+
+.screw {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #555 0%, #222 50%, #444 100%);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.2),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.5),
+    0 2px 4px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+
+.screw::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 2px;
+  background: #111;
+  border-radius: 1px;
+}
+
+.screw::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(90deg);
+  width: 8px;
+  height: 2px;
+  background: #111;
+  border-radius: 1px;
+}
+
+.screwTL { top: 12px; left: 12px; }
+.screwTR { top: 12px; right: 12px; }
+.screwBL { bottom: 12px; left: 12px; }
+.screwBR { bottom: 12px; right: 12px; }
 
 /* ============================================
    TOP BEZEL
@@ -46,7 +94,26 @@
 }
 
 .topLeft {
-  flex: 0 0 80px;
+  flex: 0 0 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Manufacturer badge */
+.manufacturerBadge {
+  padding: 4px 8px;
+  background: linear-gradient(180deg, #333 0%, #1a1a1a 100%);
+  border: 1px solid #444;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.badgeText {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: #666;
 }
 
 .topRight {
@@ -54,6 +121,54 @@
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+/* Session timer */
+.sessionTimer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 10px;
+  background: var(--bezel-dark);
+  border: 1px solid #333;
+  border-radius: 4px;
+}
+
+.timerLabel {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 7px;
+  letter-spacing: 1px;
+  color: #444;
+  text-transform: uppercase;
+}
+
+.timerValue {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: #00ff88;
+  text-shadow: 0 0 6px rgba(0, 255, 136, 0.5);
+}
+
+/* PlayStation buttons display */
+.psButtons {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.psButtons span {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.psTriangle { color: #00ff88; }
+.psCircle { color: #ff6b6b; }
+.psCross { color: #6b9fff; }
+.psSquare { color: #ff6bff; }
+
+.logoButtons {
+  margin-top: 6px;
 }
 
 .topCenter {
@@ -276,6 +391,140 @@
   background: linear-gradient(90deg, transparent 0%, var(--accent-color) 100%);
 }
 
+/* Arcade sticker */
+.arcadeSticker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 4px;
+  background: linear-gradient(180deg, #ffcc00 0%, #ff9900 100%);
+  border-radius: 4px;
+  transform: rotate(-3deg);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.stickerIcon {
+  font-size: 14px;
+}
+
+.stickerText {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 6px;
+  font-weight: 700;
+  color: #000;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Volume indicator */
+.volumeIndicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px;
+  background: var(--bezel-dark);
+  border-radius: 4px;
+}
+
+.volumeIcon {
+  width: 14px;
+  height: 14px;
+  color: #555;
+}
+
+.volumeBars {
+  display: flex;
+  gap: 2px;
+  align-items: flex-end;
+}
+
+.volumeBar {
+  width: 3px;
+  height: 8px;
+  background: #333;
+  border-radius: 1px;
+}
+
+.volumeBar[data-active="true"] {
+  background: var(--accent-color);
+  box-shadow: 0 0 4px var(--accent-color);
+}
+
+/* Quality seal */
+.qualitySeal {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffd700 0%, #ff8c00 50%, #ffd700 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    inset 0 2px 4px rgba(255, 255, 255, 0.4),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+    0 2px 6px rgba(0, 0, 0, 0.4);
+  transform: rotate(12deg);
+}
+
+.sealInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+}
+
+.sealText {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 900;
+  color: #000;
+}
+
+.sealSubtext {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 5px;
+  font-weight: 700;
+  color: #333;
+  letter-spacing: 0.5px;
+}
+
+/* Signal indicator */
+.signalIndicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px;
+  background: var(--bezel-dark);
+  border-radius: 4px;
+}
+
+.signalIcon {
+  width: 14px;
+  height: 14px;
+  color: #00ff88;
+}
+
+.signalBars {
+  display: flex;
+  gap: 2px;
+  align-items: flex-end;
+  height: 12px;
+}
+
+.signalBar {
+  width: 3px;
+  background: #333;
+  border-radius: 1px;
+}
+
+.signalBar[data-active="true"] {
+  background: #00ff88;
+  box-shadow: 0 0 4px rgba(0, 255, 136, 0.5);
+}
+
 /* Speaker grill */
 .speakerGrill {
   display: flex;
@@ -343,6 +592,42 @@
   z-index: -1; /* Behind screen content */
 }
 
+/* CRT brand label */
+.crtBrand {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 2px 12px;
+  background: linear-gradient(180deg, #333 0%, #1a1a1a 100%);
+  border: 1px solid #444;
+  border-radius: 0 0 4px 4px;
+  border-top: none;
+}
+
+.crtBrand span {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: #666;
+  text-transform: uppercase;
+}
+
+/* CRT curvature effect */
+.crtCurvature {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 120% 120% at center,
+    transparent 0%,
+    transparent 70%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+  border-radius: 8px;
+  pointer-events: none;
+}
+
 /* CRT overlay effects - behind content but adds visual flair */
 .crtOverlay {
   position: absolute;
@@ -397,66 +682,174 @@
 
 .bottomLeft,
 .bottomRight {
-  flex: 0 0 100px;
+  flex: 0 0 120px;
 }
 
 .bottomCenter {
   flex: 1;
-  text-align: center;
+  display: flex;
+  justify-content: center;
 }
 
-/* Port labels */
+/* Player port styling */
+.playerPort {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  background: var(--bezel-dark);
+  border-radius: 6px;
+  border: 1px solid #333;
+}
+
+.portConnector {
+  display: flex;
+  gap: 4px;
+  padding: 4px 8px;
+  background: #111;
+  border-radius: 3px;
+  border: 1px solid #222;
+}
+
+.connectorPin {
+  width: 4px;
+  height: 8px;
+  background: linear-gradient(180deg, #666 0%, #333 100%);
+  border-radius: 1px;
+}
+
 .portLabel {
   font-family: 'Orbitron', sans-serif;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 600;
   letter-spacing: 1px;
-  color: #444;
-  padding: 6px 12px;
-  background: var(--bezel-dark);
-  border-radius: 4px;
+  color: #555;
+  text-transform: uppercase;
+}
+
+.portStatus {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #333;
+}
+
+.portStatus[data-connected="true"] {
+  background: #00ff88;
+  box-shadow: 0 0 8px rgba(0, 255, 136, 0.6);
+  animation: portPulse 2s ease-in-out infinite;
+}
+
+@keyframes portPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Control panel */
+.controlPanel {
+  padding: 10px 20px;
+  background: linear-gradient(180deg, var(--bezel-dark) 0%, #080810 100%);
+  border-radius: 8px;
   border: 1px solid #333;
-  text-align: center;
+  border-top: 2px solid var(--accent-color);
 }
 
-.bottomRight .portLabel {
-  text-align: center;
+.controlPanelHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
-/* Control hints */
+.controlPanelTitle {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--accent-color);
+  text-shadow: 0 0 8px var(--accent-color);
+}
+
+.controlPanelSubtitle {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 8px;
+  color: #444;
+  letter-spacing: 1px;
+}
+
 .controlHints {
   display: flex;
+  gap: 20px;
   justify-content: center;
 }
 
-.keyboardHelp {
+.controlGroup {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px 20px;
-}
-
-.keyHint {
-  display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 4px;
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 10px;
-  color: #555;
-  letter-spacing: 0.5px;
 }
 
-.keyHint kbd {
-  display: inline-block;
-  padding: 2px 5px;
+.controlLabel {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #555;
+}
+
+.keyGroup {
+  display: flex;
+  gap: 3px;
+}
+
+.keyGroup kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  padding: 3px 6px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 9px;
   font-weight: 600;
   color: #00ffff;
-  background: var(--bezel-dark);
+  background: linear-gradient(180deg, #1a1a2e 0%, #0a0a14 100%);
   border: 1px solid #333;
-  border-radius: 3px;
-  box-shadow: 0 1px 0 #222;
+  border-radius: 4px;
+  box-shadow:
+    0 2px 0 #111,
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.arrowKeys {
+  letter-spacing: 1px;
+}
+
+/* PlayStation-style keys */
+.psKey {
+  width: 22px;
+  height: 22px;
+  border-radius: 50% !important;
+  font-size: 11px !important;
+}
+
+.psKey[data-button="cross"] { color: #6b9fff !important; border-color: #6b9fff !important; }
+.psKey[data-button="circle"] { color: #ff6b6b !important; border-color: #ff6b6b !important; }
+.psKey[data-button="square"] { color: #ff6bff !important; border-color: #ff6bff !important; }
+.psKey[data-button="triangle"] { color: #00ff88 !important; border-color: #00ff88 !important; }
+
+/* T-molding edge effect */
+.tMolding {
+  position: absolute;
+  inset: -3px;
+  border-radius: 23px;
+  border: 3px solid transparent;
+  background: linear-gradient(var(--bezel-dark), var(--bezel-dark)) padding-box,
+              linear-gradient(180deg, var(--accent-color), var(--secondary-color)) border-box;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.5;
 }
 
 /* ============================================
@@ -583,20 +976,58 @@
     display: none;
   }
 
-  .speakerGrill {
+  .speakerGrill,
+  .arcadeSticker,
+  .volumeIndicator,
+  .qualitySeal,
+  .signalIndicator {
     display: none;
   }
 
-  .gamepadStatus {
+  .gamepadStatus,
+  .sessionTimer {
     display: none;
   }
 
-  .keyboardHelp {
-    gap: 8px 15px;
+  .manufacturerBadge {
+    display: none;
   }
 
-  .keyHint {
-    font-size: 9px;
+  .controlHints {
+    gap: 12px;
+  }
+
+  .controlGroup {
+    gap: 2px;
+  }
+
+  .keyGroup kbd {
+    min-width: 16px;
+    padding: 2px 4px;
+    font-size: 8px;
+  }
+
+  .psKey {
+    width: 18px;
+    height: 18px;
+    font-size: 9px !important;
+  }
+
+  .bottomLeft,
+  .bottomRight {
+    flex: 0 0 80px;
+  }
+
+  .playerPort {
+    padding: 6px;
+  }
+
+  .portConnector {
+    display: none;
+  }
+
+  .crtBrand {
+    display: none;
   }
 }
 
@@ -643,24 +1074,49 @@
     font-size: 9px;
   }
 
+  .logoButtons {
+    display: none;
+  }
+
+  .controlPanel {
+    padding: 8px 12px;
+  }
+
+  .controlPanelHeader {
+    margin-bottom: 4px;
+  }
+
+  .controlPanelTitle {
+    font-size: 9px;
+  }
+
   .controlHints {
-    gap: 15px;
+    gap: 10px;
   }
 
-  .keyboardHelp {
-    gap: 6px 12px;
+  .controlGroup {
+    gap: 2px;
   }
 
-  .keyHint {
-    font-size: 8px;
-  }
-
-  .keyHint kbd {
-    padding: 1px 3px;
+  .controlLabel {
     font-size: 7px;
   }
 
-  .corner {
+  .keyGroup kbd {
+    min-width: 14px;
+    padding: 2px 3px;
+    font-size: 7px;
+  }
+
+  .psKey {
+    width: 16px;
+    height: 16px;
+    font-size: 8px !important;
+  }
+
+  .corner,
+  .screw,
+  .tMolding {
     display: none;
   }
 }
