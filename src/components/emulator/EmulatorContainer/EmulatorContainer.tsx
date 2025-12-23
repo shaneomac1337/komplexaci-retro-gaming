@@ -161,6 +161,49 @@ function EmulatorContainerComponent({
     };
   }, [showCustomLoader, isReady, game.id, retryCount]);
 
+  // Fallback: Detect when EmulatorJS has rendered (in case callbacks don't fire)
+  useEffect(() => {
+    if (!showCustomLoader || hasCompletedLoadingRef.current) return;
+
+    // Poll for EmulatorJS canvas being rendered with content
+    const checkInterval = setInterval(() => {
+      const player = document.getElementById('emulator-player');
+      if (!player) return;
+
+      // Check if EmulatorJS has created its canvas and game container
+      const canvas = player.querySelector('canvas');
+      const gameDiv = player.querySelector('#game');
+
+      // Check if EJS_emulator is available (indicates full initialization)
+      const ejsReady = typeof window !== 'undefined' && window.EJS_emulator;
+
+      if ((canvas && gameDiv) || ejsReady) {
+        console.log('[Emulator] Fallback detection: EmulatorJS loaded');
+        completeLoading();
+      }
+    }, 500);
+
+    // Timeout fallback after 45 seconds - show error if still stuck
+    const timeoutId = setTimeout(() => {
+      if (!hasCompletedLoadingRef.current) {
+        console.warn('[Emulator] Loading timeout - checking if emulator is actually running');
+        // One final check before giving up
+        const player = document.getElementById('emulator-player');
+        const canvas = player?.querySelector('canvas');
+        if (canvas) {
+          // Canvas exists, assume it's working
+          completeLoading();
+        }
+        // If no canvas, the error handling will kick in or user can retry
+      }
+    }, 45000);
+
+    return () => {
+      clearInterval(checkInterval);
+      clearTimeout(timeoutId);
+    };
+  }, [showCustomLoader, completeLoading]);
+
   // Sync volume with store - delay slightly to ensure emulator module is fully ready
   useEffect(() => {
     if (isReady) {
