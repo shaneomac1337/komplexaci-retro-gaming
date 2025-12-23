@@ -38,17 +38,17 @@ interface MappingSection {
 }
 
 /**
- * Default key mappings for all consoles
+ * Default key mappings for all consoles (EmulatorJS defaults)
  */
 const BASE_MAPPINGS: MappingSection[] = [
   {
     title: 'Movement',
     icon: 'gamepad',
     mappings: [
-      { action: 'Up', keys: ['Arrow Up', 'W'] },
-      { action: 'Down', keys: ['Arrow Down', 'S'] },
-      { action: 'Left', keys: ['Arrow Left', 'A'] },
-      { action: 'Right', keys: ['Arrow Right', 'D'] },
+      { action: 'D-Pad Up', keys: ['↑'] },
+      { action: 'D-Pad Down', keys: ['↓'] },
+      { action: 'D-Pad Left', keys: ['←'] },
+      { action: 'D-Pad Right', keys: ['→'] },
     ],
   },
   {
@@ -56,18 +56,17 @@ const BASE_MAPPINGS: MappingSection[] = [
     icon: 'settings',
     mappings: [
       { action: 'Start', keys: ['Enter'] },
-      { action: 'Select', keys: ['Shift'] },
-      { action: 'Quick Save (F5)', keys: ['F5'] },
-      { action: 'Quick Load (F8)', keys: ['F8'] },
-      { action: 'Pause', keys: ['P', 'Escape'] },
-      { action: 'Fullscreen', keys: ['F'] },
-      { action: 'Mute', keys: ['M'] },
+      { action: 'Select', keys: ['V'] },
+      { action: 'Quick Save', keys: ['1'] },
+      { action: 'Quick Load', keys: ['2'] },
+      { action: 'Change Save Slot', keys: ['3'] },
+      { action: 'EmulatorJS Menu', keys: ['Esc'] },
     ],
   },
 ];
 
 /**
- * Console-specific action button mappings
+ * Console-specific action button mappings (EmulatorJS defaults)
  */
 const CONSOLE_ACTION_MAPPINGS: Record<ConsoleType, KeyMapping[]> = {
   nes: [
@@ -83,14 +82,16 @@ const CONSOLE_ACTION_MAPPINGS: Record<ConsoleType, KeyMapping[]> = {
     { action: 'R Shoulder', keys: ['E'] },
   ],
   ps1: [
-    { action: 'Cross (X)', keys: ['X'] },
-    { action: 'Circle (O)', keys: ['C'] },
-    { action: 'Square', keys: ['Z'] },
-    { action: 'Triangle', keys: ['S'] },
+    { action: '✕ Cross', keys: ['X'] },
+    { action: '○ Circle', keys: ['S'] },
+    { action: '□ Square', keys: ['Z'] },
+    { action: '△ Triangle', keys: ['A'] },
     { action: 'L1', keys: ['Q'] },
     { action: 'R1', keys: ['E'] },
-    { action: 'L2', keys: ['1'] },
-    { action: 'R2', keys: ['3'] },
+    { action: 'L2', keys: ['Tab'] },
+    { action: 'R2', keys: ['R'] },
+    { action: 'L Stick', keys: ['T/G/F/H'] },
+    { action: 'R Stick', keys: ['I/K/J/L'] },
   ],
   n64: [
     { action: 'A Button', keys: ['X'] },
@@ -195,50 +196,45 @@ export const EmulatorKeyboardHelp = memo(function EmulatorKeyboardHelp({
           <span>{consoleConfig.name}</span>
         </div>
 
-        {/* Visual keyboard layout */}
+        {/* Visual keyboard layout - PS1 optimized */}
         <div className={styles.keyboardLayout} aria-hidden="true">
+          {/* Row 1: Number keys and shoulders */}
           <div className={styles.keyboardRow}>
-            {['1', '2', '3', 'Q', 'W', 'E'].map((key) => (
+            {['Tab', '1', '2', '3', 'Q', 'E', 'R'].map((key) => (
               <div
                 key={key}
                 className={clsx(styles.keyboardKey, {
-                  [styles.active]: ['Q', 'W', 'E'].includes(key),
+                  [styles.active]: ['Tab', 'Q', 'E', 'R', '1', '2', '3'].includes(key),
                 })}
               >
                 {key}
               </div>
             ))}
           </div>
+          {/* Row 2: Face buttons */}
           <div className={styles.keyboardRow}>
-            {['A', 'S', 'D', 'Z', 'X', 'C'].map((key) => (
+            {['A', 'S', 'Z', 'X', 'V'].map((key) => (
               <div
                 key={key}
                 className={clsx(styles.keyboardKey, {
-                  [styles.active]: ['A', 'S', 'D', 'Z', 'X', 'C'].includes(key),
+                  [styles.active]: ['A', 'S', 'Z', 'X', 'V'].includes(key),
                 })}
               >
                 {key}
               </div>
             ))}
-          </div>
-          <div className={styles.keyboardRow}>
-            <div className={clsx(styles.keyboardKey, styles.space)}>Space</div>
-          </div>
-          <div className={styles.keyboardRow}>
-            <div className={clsx(styles.keyboardKey, styles.arrow, styles.active)}>
-              Up
+            <div className={clsx(styles.keyboardKey, styles.active, styles.wide)}>
+              Enter
             </div>
           </div>
+          {/* Arrow keys */}
           <div className={styles.keyboardRow}>
-            <div className={clsx(styles.keyboardKey, styles.arrow, styles.active)}>
-              Left
-            </div>
-            <div className={clsx(styles.keyboardKey, styles.arrow, styles.active)}>
-              Down
-            </div>
-            <div className={clsx(styles.keyboardKey, styles.arrow, styles.active)}>
-              Right
-            </div>
+            <div className={clsx(styles.keyboardKey, styles.arrow, styles.active)}>↑</div>
+          </div>
+          <div className={styles.keyboardRow}>
+            <div className={clsx(styles.keyboardKey, styles.arrow, styles.active)}>←</div>
+            <div className={clsx(styles.keyboardKey, styles.arrow, styles.active)}>↓</div>
+            <div className={clsx(styles.keyboardKey, styles.arrow, styles.active)}>→</div>
           </div>
         </div>
 

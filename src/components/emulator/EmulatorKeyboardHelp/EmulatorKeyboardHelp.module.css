@@ -152,6 +152,11 @@
   min-width: 160px;
 }
 
+.keyboardKey.wide {
+  min-width: 60px;
+  font-size: var(--text-xxs, 0.625rem);
+}
+
 .keyboardKey.arrow {
   min-width: 44px;
 }
