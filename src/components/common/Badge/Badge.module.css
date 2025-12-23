@@ -1,0 +1,149 @@
+/* ============================================
+   Badge Component Styles
+   Cyberpunk-styled badges with neon glow
+   ============================================ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+/* ============================================
+   Sizes
+   ============================================ */
+
+.sm {
+  padding: var(--spacing-1) var(--spacing-2);
+  font-size: var(--text-xs);
+}
+
+.md {
+  padding: var(--spacing-1) var(--spacing-3);
+  font-size: var(--text-sm);
+}
+
+/* ============================================
+   Variants
+   ============================================ */
+
+/* Default - Cyan neon */
+.default {
+  color: var(--color-bg-primary);
+  background: var(--color-neon-cyan);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+/* Success - Green */
+.success {
+  color: var(--color-bg-primary);
+  background: var(--color-success);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+}
+
+/* Warning - Yellow/Orange */
+.warning {
+  color: var(--color-bg-primary);
+  background: var(--color-warning);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+}
+
+/* Error - Red */
+.error {
+  color: var(--color-text-primary);
+  background: var(--color-error);
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+}
+
+/* Console - Used for platform-specific badges */
+.console {
+  color: var(--color-text-primary);
+}
+
+/* ============================================
+   Console-Specific Colors
+   ============================================ */
+
+/* PlayStation */
+.consoleps1 {
+  background: #003087;
+  box-shadow: 0 0 10px rgba(0, 48, 135, 0.4);
+}
+
+/* NES */
+.consolenes {
+  background: #e60012;
+  box-shadow: 0 0 10px rgba(230, 0, 18, 0.4);
+}
+
+/* SNES */
+.consolesnes {
+  background: #7b5aa6;
+  box-shadow: 0 0 10px rgba(123, 90, 166, 0.4);
+}
+
+/* N64 */
+.consolen64 {
+  background: #009e60;
+  box-shadow: 0 0 10px rgba(0, 158, 96, 0.4);
+}
+
+/* Game Boy */
+.consolegb {
+  background: #8b956d;
+  box-shadow: 0 0 10px rgba(139, 149, 109, 0.4);
+}
+
+/* Game Boy Advance */
+.consolegba {
+  background: #5a2d82;
+  box-shadow: 0 0 10px rgba(90, 45, 130, 0.4);
+}
+
+/* ============================================
+   Hover Effects
+   ============================================ */
+
+.badge {
+  transition: all var(--transition-base);
+}
+
+.badge:hover {
+  filter: brightness(1.1);
+}
+
+/* ============================================
+   Pulse Animation (optional)
+   ============================================ */
+
+@keyframes badgePulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animated {
+  animation: badgePulse 2s ease-in-out infinite;
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .badge {
+    transition: none;
+  }
+
+  .animated {
+    animation: none;
+  }
+}

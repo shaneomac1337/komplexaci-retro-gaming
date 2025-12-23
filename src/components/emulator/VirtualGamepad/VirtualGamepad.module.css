@@ -1,0 +1,451 @@
+/* ============================================
+   Virtual Gamepad Component Styles
+   Touch-friendly on-screen controls for mobile
+   ============================================ */
+
+/* ============================================
+   Container
+   ============================================ */
+
+.container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: var(--spacing-4);
+  pointer-events: none;
+  z-index: var(--z-fixed);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+.container.hidden {
+  display: none;
+}
+
+/* ============================================
+   Control Sections
+   ============================================ */
+
+.leftSection {
+  pointer-events: auto;
+}
+
+.rightSection {
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--spacing-3);
+}
+
+.centerSection {
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-2);
+  position: absolute;
+  bottom: var(--spacing-4);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* ============================================
+   D-Pad
+   ============================================ */
+
+.dpad {
+  position: relative;
+  width: 130px;
+  height: 130px;
+}
+
+.dpadButton {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: var(--glass-bg);
+  border: 2px solid var(--color-neon-cyan);
+  border-radius: var(--radius-md);
+  color: var(--color-neon-cyan);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.dpadButton:active,
+.dpadButton.pressed {
+  background: var(--color-neon-cyan);
+  color: var(--color-bg-primary);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+}
+
+.dpadUp {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.dpadDown {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.dpadLeft {
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.dpadRight {
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.dpadCenter {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 36px;
+  height: 36px;
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--glass-border);
+  cursor: default;
+}
+
+.dpadCenter:active {
+  background: var(--color-bg-tertiary);
+  color: var(--color-neon-cyan);
+  box-shadow: none;
+}
+
+/* ============================================
+   Action Buttons
+   ============================================ */
+
+.actionButtons {
+  display: grid;
+  gap: var(--spacing-2);
+}
+
+.actionButtonsNes {
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(1, 1fr);
+}
+
+.actionButtonsSnes {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+
+.actionButtonsPs1 {
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+
+.actionButtonsN64 {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+}
+
+.actionButtonsGb {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.actionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: var(--glass-bg);
+  border: 2px solid var(--color-neon-magenta);
+  border-radius: 50%;
+  color: var(--color-neon-magenta);
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-neon-magenta);
+}
+
+.actionButton:active,
+.actionButton.pressed {
+  background: var(--color-neon-magenta);
+  color: var(--color-bg-primary);
+  box-shadow: 0 0 20px rgba(255, 0, 255, 0.8);
+}
+
+/* Button color variants */
+.actionButton.buttonA {
+  border-color: #ff3333;
+  color: #ff3333;
+  box-shadow: 0 0 10px rgba(255, 51, 51, 0.5);
+}
+
+.actionButton.buttonA:active,
+.actionButton.buttonA.pressed {
+  background: #ff3333;
+  color: var(--color-bg-primary);
+}
+
+.actionButton.buttonB {
+  border-color: #ffff00;
+  color: #ffff00;
+  box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
+}
+
+.actionButton.buttonB:active,
+.actionButton.buttonB.pressed {
+  background: #ffff00;
+  color: var(--color-bg-primary);
+}
+
+.actionButton.buttonX {
+  border-color: #3399ff;
+  color: #3399ff;
+  box-shadow: 0 0 10px rgba(51, 153, 255, 0.5);
+}
+
+.actionButton.buttonX:active,
+.actionButton.buttonX.pressed {
+  background: #3399ff;
+  color: var(--color-bg-primary);
+}
+
+.actionButton.buttonY {
+  border-color: #33ff33;
+  color: #33ff33;
+  box-shadow: 0 0 10px rgba(51, 255, 51, 0.5);
+}
+
+.actionButton.buttonY:active,
+.actionButton.buttonY.pressed {
+  background: #33ff33;
+  color: var(--color-bg-primary);
+}
+
+/* ============================================
+   Shoulder Buttons
+   ============================================ */
+
+.shoulderButtons {
+  display: flex;
+  gap: var(--spacing-2);
+}
+
+.shoulderButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 32px;
+  background: var(--glass-bg);
+  border: 2px solid var(--color-neon-purple);
+  border-radius: var(--radius-md);
+  color: var(--color-neon-purple);
+  font-family: var(--font-heading);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-neon-purple);
+}
+
+.shoulderButton:active,
+.shoulderButton.pressed {
+  background: var(--color-neon-purple);
+  color: var(--color-bg-primary);
+  box-shadow: 0 0 20px rgba(157, 78, 221, 0.8);
+}
+
+/* ============================================
+   System Buttons (Start, Select)
+   ============================================ */
+
+.systemButtons {
+  display: flex;
+  gap: var(--spacing-2);
+}
+
+.systemButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-1) var(--spacing-3);
+  min-width: 50px;
+  height: 28px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-full);
+  color: var(--color-text-secondary);
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.systemButton:active,
+.systemButton.pressed {
+  background: var(--color-text-secondary);
+  color: var(--color-bg-primary);
+}
+
+/* ============================================
+   Toggle Button
+   ============================================ */
+
+.toggleButton {
+  position: absolute;
+  bottom: var(--spacing-4);
+  right: var(--spacing-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 50%;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  pointer-events: auto;
+  z-index: calc(var(--z-fixed) + 1);
+}
+
+.toggleButton:hover {
+  border-color: var(--color-neon-cyan);
+  color: var(--color-neon-cyan);
+}
+
+.toggleButton.active {
+  border-color: var(--color-neon-magenta);
+  color: var(--color-neon-magenta);
+}
+
+/* ============================================
+   C-Buttons (N64 specific)
+   ============================================ */
+
+.cButtons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-1);
+}
+
+.cButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--glass-bg);
+  border: 2px solid #ffcc00;
+  border-radius: 50%;
+  color: #ffcc00;
+  font-family: var(--font-heading);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+}
+
+.cButton:active,
+.cButton.pressed {
+  background: #ffcc00;
+  color: var(--color-bg-primary);
+  box-shadow: 0 0 20px rgba(255, 204, 0, 0.8);
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .dpadButton,
+  .actionButton,
+  .shoulderButton,
+  .systemButton,
+  .toggleButton,
+  .cButton {
+    transition: none;
+  }
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+
+@media (max-width: 480px) {
+  .container {
+    padding: var(--spacing-2);
+  }
+
+  .dpad {
+    width: 100px;
+    height: 100px;
+  }
+
+  .dpadButton {
+    width: 36px;
+    height: 36px;
+  }
+
+  .dpadCenter {
+    width: 28px;
+    height: 28px;
+  }
+
+  .actionButton {
+    width: 40px;
+    height: 40px;
+    font-size: var(--text-xs);
+  }
+
+  .shoulderButton {
+    width: 48px;
+    height: 28px;
+    font-size: 0.6rem;
+  }
+
+  .systemButton {
+    min-width: 40px;
+    padding: var(--spacing-1) var(--spacing-2);
+    font-size: 0.55rem;
+  }
+
+  .toggleButton {
+    width: 32px;
+    height: 32px;
+  }
+
+  .cButton {
+    width: 28px;
+    height: 28px;
+    font-size: 0.6rem;
+  }
+}
+
+/* Large screens - hide virtual gamepad by default */
+@media (min-width: 1024px) and (hover: hover) {
+  .container {
+    display: none;
+  }
+}

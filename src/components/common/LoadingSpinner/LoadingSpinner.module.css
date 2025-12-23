@@ -1,0 +1,197 @@
+/* ============================================
+   LoadingSpinner Component Styles
+   Neon spinner with cyberpunk effects
+   ============================================ */
+
+/* ============================================
+   Container
+   ============================================ */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-4);
+}
+
+/* ============================================
+   Fullscreen Overlay
+   ============================================ */
+
+.fullScreen {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.9);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: var(--z-modal);
+}
+
+/* ============================================
+   Spinner
+   ============================================ */
+
+.spinner {
+  border-radius: 50%;
+  border-style: solid;
+  border-color: transparent;
+  animation: spin 0.8s linear infinite, glow 2s ease-in-out infinite;
+}
+
+/* ============================================
+   Sizes
+   ============================================ */
+
+.sm {
+  width: 24px;
+  height: 24px;
+  border-width: 2px;
+}
+
+.md {
+  width: 40px;
+  height: 40px;
+  border-width: 3px;
+}
+
+.lg {
+  width: 64px;
+  height: 64px;
+  border-width: 4px;
+}
+
+/* ============================================
+   Colors
+   ============================================ */
+
+.cyan {
+  border-top-color: var(--color-neon-cyan);
+  border-right-color: rgba(0, 255, 255, 0.3);
+}
+
+.magenta {
+  border-top-color: var(--color-neon-magenta);
+  border-right-color: rgba(255, 0, 255, 0.3);
+}
+
+.white {
+  border-top-color: var(--color-text-primary);
+  border-right-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ============================================
+   Loading Text
+   ============================================ */
+
+.text {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  animation: textPulse 1.5s ease-in-out infinite;
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px currentColor);
+  }
+  50% {
+    filter: drop-shadow(0 0 8px currentColor) drop-shadow(0 0 12px currentColor);
+  }
+}
+
+@keyframes textPulse {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Color-specific glow */
+.cyan.spinner {
+  filter: drop-shadow(0 0 4px var(--color-neon-cyan));
+}
+
+.magenta.spinner {
+  filter: drop-shadow(0 0 4px var(--color-neon-magenta));
+}
+
+.white.spinner {
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
+}
+
+/* ============================================
+   Double Ring Effect
+   ============================================ */
+
+.spinner::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  opacity: 0.5;
+  animation: spin 1.2s linear infinite reverse;
+}
+
+.sm.spinner::before {
+  inset: 2px;
+  border-width: 1px;
+}
+
+.lg.spinner::before {
+  inset: 4px;
+  border-width: 3px;
+}
+
+.cyan.spinner::before {
+  border-top-color: var(--color-neon-cyan);
+}
+
+.magenta.spinner::before {
+  border-top-color: var(--color-neon-magenta);
+}
+
+.white.spinner::before {
+  border-top-color: var(--color-text-primary);
+}
+
+/* Make spinner position relative for ::before */
+.spinner {
+  position: relative;
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+    opacity: 0.7;
+  }
+
+  .spinner::before {
+    animation: none;
+  }
+
+  .text {
+    animation: none;
+    opacity: 0.85;
+  }
+}

@@ -1,0 +1,235 @@
+/**
+ * Sidebar Component Styles
+ * Responsive sidebar with glassmorphism and neon effects
+ */
+
+/* Overlay backdrop for mobile */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 199;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.overlayVisible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Sidebar container */
+.sidebar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 260px;
+  min-height: 0;
+  background: rgba(15, 15, 35, 0.95);
+  border-right: 1px solid rgba(0, 255, 255, 0.1);
+  box-shadow:
+    4px 0 30px rgba(0, 0, 0, 0.3),
+    1px 0 0 rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
+
+.sidebarCollapsed {
+  width: 72px;
+}
+
+/* Sidebar content */
+.sidebarContent {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 255, 255, 0.3) rgba(0, 0, 0, 0.2);
+}
+
+.sidebarContent::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebarContent::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.sidebarContent::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.sidebarContent::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 255, 0.5);
+}
+
+/* Close button (mobile only) */
+.closeButton {
+  display: none;
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 10;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: rgba(30, 30, 60, 0.8);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.closeButton:hover {
+  background: rgba(255, 0, 100, 0.2);
+  border-color: rgba(255, 0, 100, 0.5);
+}
+
+.closeButton:focus-visible {
+  outline: 2px solid rgba(0, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+.closeIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.closeButton:hover .closeIcon {
+  color: #ff0064;
+}
+
+/* Collapse button (desktop only) */
+.collapseButton {
+  position: absolute;
+  right: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 48px;
+  padding: 0;
+  background: rgba(30, 30, 60, 0.95);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  border-left: none;
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.25s ease;
+}
+
+.collapseButton:hover {
+  background: rgba(0, 255, 255, 0.1);
+  border-color: rgba(0, 255, 255, 0.4);
+}
+
+.collapseButton:focus-visible {
+  outline: 2px solid rgba(0, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+.collapseIcon {
+  width: 1rem;
+  height: 1rem;
+  color: rgba(0, 255, 255, 0.7);
+  transition: transform 0.3s ease;
+}
+
+.collapseIcon.collapsed {
+  transform: rotate(180deg);
+}
+
+.collapseButton:hover .collapseIcon {
+  color: #00ffff;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .overlay {
+    display: block;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 280px;
+    z-index: 200;
+    transform: translateX(-100%);
+    border-right: none;
+    box-shadow: 4px 0 40px rgba(0, 0, 0, 0.5);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .sidebarCollapsed {
+    width: 280px;
+  }
+
+  .closeButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .collapseButton {
+    display: none;
+  }
+
+  .sidebarContent {
+    padding-top: 3.5rem;
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .sidebar {
+    width: 220px;
+  }
+
+  .sidebarCollapsed {
+    width: 64px;
+  }
+}
+
+/* Desktop large */
+@media (min-width: 1400px) {
+  .sidebar {
+    width: 300px;
+  }
+}
+
+/* Neon glow effect on top border */
+.sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 255, 255, 0.5) 50%,
+    transparent 100%
+  );
+  z-index: 1;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .sidebar,
+  .closeButton,
+  .collapseButton,
+  .collapseIcon {
+    transition: none;
+  }
+}

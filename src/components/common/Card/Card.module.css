@@ -1,0 +1,123 @@
+/* ============================================
+   Card Component Styles
+   Glassmorphism card with cyberpunk effects
+   ============================================ */
+
+.card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
+}
+
+/* ============================================
+   Variants
+   ============================================ */
+
+/* Default variant */
+.default {
+  /* Base styles from .card */
+}
+
+/* Interactive variant - clickable with glow */
+.interactive {
+  cursor: pointer;
+}
+
+.interactive:hover {
+  border-color: var(--color-neon-cyan);
+  box-shadow: var(--shadow-neon-cyan), var(--shadow-lg);
+  transform: translateY(-4px);
+}
+
+.interactive:focus-visible {
+  outline: none;
+  border-color: var(--color-neon-cyan);
+  box-shadow: 0 0 0 2px var(--color-neon-cyan);
+}
+
+.interactive:active {
+  transform: translateY(-2px);
+}
+
+/* Glass variant - more transparent */
+.glass {
+  background: rgba(26, 26, 46, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass:hover {
+  background: rgba(26, 26, 46, 0.6);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ============================================
+   Hover Effects
+   ============================================ */
+
+.hoverEnabled:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+}
+
+/* ============================================
+   Padding Variants
+   ============================================ */
+
+.paddingNone {
+  padding: 0;
+}
+
+.paddingSm {
+  padding: var(--spacing-3);
+}
+
+.paddingMd {
+  padding: var(--spacing-6);
+}
+
+.paddingLg {
+  padding: var(--spacing-8);
+}
+
+/* ============================================
+   Neon Border Animation
+   ============================================ */
+
+@keyframes borderGlow {
+  0%, 100% {
+    border-color: var(--color-neon-cyan);
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+  }
+  50% {
+    border-color: var(--color-neon-magenta);
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+  }
+}
+
+.interactive:focus-visible {
+  animation: borderGlow 2s ease-in-out infinite;
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+
+  .hoverEnabled:hover,
+  .interactive:hover {
+    transform: none;
+  }
+
+  .interactive:focus-visible {
+    animation: none;
+  }
+}

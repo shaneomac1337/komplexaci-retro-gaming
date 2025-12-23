@@ -1,0 +1,178 @@
+/* ============================================
+   SectionHeader Component Styles
+   Consistent neon-styled section headers
+   ============================================ */
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-4);
+  position: relative;
+  padding-bottom: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
+}
+
+/* ============================================
+   Title Group (Icon + Text)
+   ============================================ */
+
+.titleGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--color-neon-cyan);
+  filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.5));
+  flex-shrink: 0;
+}
+
+.icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.textGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+/* ============================================
+   Title
+   ============================================ */
+
+.title {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1.2;
+
+  /* Subtle glow effect */
+  text-shadow:
+    0 0 10px rgba(0, 255, 255, 0.3),
+    0 0 20px rgba(0, 255, 255, 0.1);
+}
+
+/* ============================================
+   Subtitle
+   ============================================ */
+
+.subtitle {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ============================================
+   Action Link
+   ============================================ */
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neon-magenta);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all var(--transition-base);
+}
+
+.action:hover {
+  color: var(--color-neon-cyan);
+  text-shadow: 0 0 10px currentColor;
+}
+
+.action:focus-visible {
+  outline: 2px solid var(--color-neon-cyan);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
+
+.actionIcon {
+  transition: transform var(--transition-base);
+}
+
+.action:hover .actionIcon {
+  transform: translateX(4px);
+}
+
+/* ============================================
+   Neon Underline
+   ============================================ */
+
+.underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--color-neon-cyan) 0%,
+    var(--color-neon-magenta) 50%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 10px var(--color-neon-cyan),
+    0 0 20px rgba(0, 255, 255, 0.3);
+}
+
+/* ============================================
+   Responsive Styles
+   ============================================ */
+
+@media (max-width: 640px) {
+  .header {
+    gap: var(--spacing-3);
+  }
+
+  .icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .title {
+    font-size: var(--text-xl);
+  }
+
+  .subtitle {
+    font-size: var(--text-xs);
+  }
+
+  .action {
+    font-size: var(--text-xs);
+  }
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .action:hover .actionIcon {
+    transform: none;
+  }
+
+  .action {
+    transition: none;
+  }
+}

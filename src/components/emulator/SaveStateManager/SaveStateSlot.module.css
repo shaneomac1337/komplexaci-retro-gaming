@@ -1,0 +1,276 @@
+/* ============================================
+   Save State Slot Component Styles
+   Individual save slot card with cyberpunk styling
+   ============================================ */
+
+/* ============================================
+   Slot Container
+   ============================================ */
+
+.slot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--glass-bg);
+  border: 2px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  aspect-ratio: 4 / 3;
+  min-height: 120px;
+}
+
+.slot:hover:not(.disabled) {
+  border-color: var(--color-neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+  transform: translateY(-2px);
+}
+
+.slot:focus-visible {
+  outline: none;
+  border-color: var(--color-neon-cyan);
+  box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.3), var(--shadow-neon-cyan);
+}
+
+.slot.selected {
+  border-color: var(--color-neon-magenta);
+  box-shadow: var(--shadow-neon-magenta);
+}
+
+.slot.empty {
+  opacity: 0.6;
+}
+
+.slot.empty:hover:not(.disabled) {
+  opacity: 1;
+}
+
+.slot.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ============================================
+   Screenshot/Preview Area
+   ============================================ */
+
+.preview {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-tertiary);
+  position: relative;
+  overflow: hidden;
+}
+
+.screenshot {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  color: var(--color-text-muted);
+}
+
+.placeholderIcon {
+  color: var(--color-text-muted);
+  opacity: 0.5;
+}
+
+.emptyText {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ============================================
+   Slot Number Badge
+   ============================================ */
+
+.slotBadge {
+  position: absolute;
+  top: var(--spacing-2);
+  left: var(--spacing-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-neon-cyan);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-neon-cyan);
+  z-index: 1;
+}
+
+.slot.selected .slotBadge {
+  border-color: var(--color-neon-magenta);
+  color: var(--color-neon-magenta);
+}
+
+/* ============================================
+   Delete Button
+   ============================================ */
+
+.deleteButton {
+  position: absolute;
+  top: var(--spacing-2);
+  right: var(--spacing-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 0, 85, 0.8);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  opacity: 0;
+  transition: all var(--transition-fast);
+  z-index: 2;
+}
+
+.slot:hover .deleteButton,
+.slot:focus-within .deleteButton {
+  opacity: 1;
+}
+
+.deleteButton:hover {
+  background: var(--color-error);
+  transform: scale(1.1);
+}
+
+.deleteButton:focus-visible {
+  outline: 2px solid var(--color-text-primary);
+  outline-offset: 1px;
+  opacity: 1;
+}
+
+/* ============================================
+   Info Footer
+   ============================================ */
+
+.info {
+  padding: var(--spacing-2) var(--spacing-3);
+  background: var(--color-bg-secondary);
+  border-top: 1px solid var(--glass-border);
+}
+
+.timestamp {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================
+   Mode Indicators
+   ============================================ */
+
+.modeOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.slot:hover:not(.disabled) .modeOverlay {
+  opacity: 1;
+}
+
+.modeIcon {
+  color: var(--color-neon-cyan);
+  filter: drop-shadow(0 0 8px var(--color-neon-cyan));
+}
+
+.modeSave .modeIcon {
+  color: var(--color-neon-magenta);
+  filter: drop-shadow(0 0 8px var(--color-neon-magenta));
+}
+
+/* ============================================
+   Hover Glow Animation
+   ============================================ */
+
+@keyframes slotGlow {
+  0%, 100% {
+    box-shadow: var(--shadow-neon-cyan);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.6),
+                0 0 40px rgba(0, 255, 255, 0.4);
+  }
+}
+
+.slot:hover:not(.empty):not(.disabled) {
+  animation: slotGlow 2s ease-in-out infinite;
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .slot {
+    transition: none;
+  }
+
+  .slot:hover:not(.empty):not(.disabled) {
+    animation: none;
+  }
+
+  .deleteButton {
+    transition: none;
+  }
+
+  .modeOverlay {
+    transition: none;
+  }
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+
+@media (max-width: 640px) {
+  .slot {
+    min-height: 100px;
+  }
+
+  .slotBadge {
+    width: 20px;
+    height: 20px;
+    font-size: var(--text-xs);
+  }
+
+  .deleteButton {
+    width: 20px;
+    height: 20px;
+    opacity: 1;
+  }
+
+  .info {
+    padding: var(--spacing-1) var(--spacing-2);
+  }
+
+  .timestamp {
+    font-size: 0.65rem;
+  }
+}

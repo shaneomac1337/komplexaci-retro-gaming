@@ -1,0 +1,234 @@
+/* ============================================
+   Emulator Keyboard Help Component Styles
+   Modal showing keyboard mappings
+   ============================================ */
+
+/* ============================================
+   Content Container
+   ============================================ */
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+/* ============================================
+   Sections
+   ============================================ */
+
+.section {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-4);
+  background: var(--color-bg-tertiary);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.sectionIcon {
+  color: var(--color-neon-cyan);
+}
+
+.sectionTitle {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-neon-cyan);
+  margin: 0;
+}
+
+.sectionContent {
+  padding: var(--spacing-4);
+}
+
+/* ============================================
+   Key Mappings
+   ============================================ */
+
+.mappingList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.mapping {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-2) 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mapping:last-child {
+  border-bottom: none;
+}
+
+.action {
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+}
+
+.keys {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+}
+
+.key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 var(--spacing-2);
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-neon-cyan);
+  text-transform: uppercase;
+}
+
+.keySeparator {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  padding: 0 var(--spacing-1);
+}
+
+/* ============================================
+   Visual Keyboard Layout
+   ============================================ */
+
+.keyboardLayout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  padding: var(--spacing-4);
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-4);
+}
+
+.keyboardRow {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-1);
+}
+
+.keyboardKey {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 var(--spacing-2);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.keyboardKey.active {
+  border-color: var(--color-neon-cyan);
+  color: var(--color-neon-cyan);
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+}
+
+.keyboardKey.space {
+  min-width: 160px;
+}
+
+.keyboardKey.arrow {
+  min-width: 44px;
+}
+
+/* ============================================
+   Console Name Badge
+   ============================================ */
+
+.consoleBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-4);
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-neon-magenta);
+  border-radius: var(--radius-full);
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  color: var(--color-neon-magenta);
+  margin-bottom: var(--spacing-4);
+}
+
+/* ============================================
+   Footer Note
+   ============================================ */
+
+.footer {
+  padding-top: var(--spacing-4);
+  border-top: 1px solid var(--glass-border);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.footerIcon {
+  color: var(--color-text-muted);
+  margin-right: var(--spacing-1);
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .keyboardKey {
+    transition: none;
+  }
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+
+@media (max-width: 640px) {
+  .content {
+    gap: var(--spacing-4);
+  }
+
+  .sectionHeader {
+    padding: var(--spacing-2) var(--spacing-3);
+  }
+
+  .sectionContent {
+    padding: var(--spacing-3);
+  }
+
+  .key {
+    min-width: 24px;
+    height: 24px;
+    font-size: 0.65rem;
+  }
+
+  .keyboardLayout {
+    display: none;
+  }
+
+  .consoleBadge {
+    font-size: var(--text-xs);
+  }
+}

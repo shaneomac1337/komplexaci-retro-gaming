@@ -1,0 +1,191 @@
+/**
+ * Footer Component Styles
+ * Cyberpunk-themed footer with neon top border
+ */
+
+.footer {
+  position: relative;
+  padding: 1rem 1.5rem;
+  background: rgba(10, 10, 25, 0.95);
+  border-top: 1px solid rgba(0, 255, 255, 0.15);
+}
+
+/* Neon glow effect on top border */
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 255, 255, 0.6) 25%,
+    rgba(255, 0, 255, 0.6) 50%,
+    rgba(0, 255, 255, 0.6) 75%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 8px rgba(0, 255, 255, 0.4),
+    0 0 16px rgba(255, 0, 255, 0.2);
+}
+
+.footerContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Copyright section */
+.copyright {
+  flex-shrink: 0;
+}
+
+.copyrightText {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(150, 150, 180, 0.8);
+}
+
+/* Center links */
+.links {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.link {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(0, 255, 255, 0.7);
+  text-decoration: none;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, #00ffff, #ff00ff);
+  transition: width 0.25s ease;
+}
+
+.link:hover {
+  color: #00ffff;
+  text-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+}
+
+.link:hover::after {
+  width: 100%;
+}
+
+.link:focus-visible {
+  outline: 2px solid rgba(0, 255, 255, 0.5);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.separator {
+  color: rgba(100, 100, 130, 0.5);
+  font-size: 0.75rem;
+}
+
+/* Social links */
+.social {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.socialLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: rgba(150, 150, 180, 0.7);
+  background: rgba(30, 30, 60, 0.5);
+  border: 1px solid rgba(0, 255, 255, 0.1);
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.socialLink:hover {
+  color: #00ffff;
+  background: rgba(0, 255, 255, 0.1);
+  border-color: rgba(0, 255, 255, 0.3);
+  box-shadow: 0 0 12px rgba(0, 255, 255, 0.2);
+}
+
+.socialLink:focus-visible {
+  outline: 2px solid rgba(0, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+.socialIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .footer {
+    padding: 1rem;
+  }
+
+  .footerContent {
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: center;
+  }
+
+  .links {
+    order: 1;
+  }
+
+  .copyright {
+    order: 2;
+  }
+
+  .social {
+    order: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .separator {
+    display: none;
+  }
+
+  .links {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .link {
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .link,
+  .link::after,
+  .socialLink {
+    transition: none;
+  }
+}

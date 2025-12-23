@@ -1,0 +1,389 @@
+/* ============================================
+   Save State Manager Component Styles
+   Panel/drawer for managing save states
+   ============================================ */
+
+/* ============================================
+   Panel Overlay
+   ============================================ */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal-backdrop);
+  padding: var(--spacing-4);
+  animation: overlayFadeIn 0.2s ease-out;
+}
+
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   Panel Container
+   ============================================ */
+
+.panel {
+  background: var(--color-bg-secondary);
+  border: 2px solid var(--color-neon-cyan);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-neon-cyan), var(--shadow-xl);
+  width: 100%;
+  max-width: 700px;
+  max-height: calc(100vh - var(--spacing-8));
+  display: flex;
+  flex-direction: column;
+  animation: panelSlideIn 0.3s ease-out;
+}
+
+.panelSave {
+  border-color: var(--color-neon-magenta);
+  box-shadow: var(--shadow-neon-magenta), var(--shadow-xl);
+}
+
+@keyframes panelSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ============================================
+   Header
+   ============================================ */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-4) var(--spacing-6);
+  border-bottom: 1px solid var(--glass-border);
+  flex-shrink: 0;
+}
+
+.titleWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.titleIcon {
+  color: var(--color-neon-cyan);
+}
+
+.panelSave .titleIcon {
+  color: var(--color-neon-magenta);
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neon-cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.panelSave .title {
+  color: var(--color-neon-magenta);
+}
+
+.closeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.closeButton:hover {
+  color: var(--color-neon-magenta);
+  border-color: var(--color-neon-magenta);
+  background: rgba(255, 0, 255, 0.1);
+}
+
+.closeButton:focus-visible {
+  outline: none;
+  border-color: var(--color-neon-cyan);
+  box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.3);
+}
+
+/* ============================================
+   Content
+   ============================================ */
+
+.content {
+  padding: var(--spacing-6);
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-neon-cyan) var(--color-bg-secondary);
+}
+
+.content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.content::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+}
+
+.content::-webkit-scrollbar-thumb {
+  background: var(--color-neon-cyan);
+  border-radius: var(--radius-sm);
+}
+
+.panelSave .content::-webkit-scrollbar-thumb {
+  background: var(--color-neon-magenta);
+}
+
+/* ============================================
+   Slots Grid
+   ============================================ */
+
+.slotsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--spacing-4);
+}
+
+/* ============================================
+   Instructions
+   ============================================ */
+
+.instructions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-4);
+  margin-top: var(--spacing-4);
+  background: var(--glass-bg);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.keyHint {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 var(--spacing-2);
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-neon-cyan);
+}
+
+/* ============================================
+   Loading State
+   ============================================ */
+
+.loadingWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-12);
+}
+
+.loadingSpinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid var(--color-bg-tertiary);
+  border-top-color: var(--color-neon-cyan);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================
+   Confirm Dialog
+   ============================================ */
+
+.confirmOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: calc(var(--z-modal) + 1);
+  padding: var(--spacing-4);
+  animation: overlayFadeIn 0.15s ease-out;
+}
+
+.confirmDialog {
+  background: var(--color-bg-secondary);
+  border: 2px solid var(--color-warning);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-6);
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(255, 170, 0, 0.3);
+  animation: panelSlideIn 0.2s ease-out;
+}
+
+.confirmTitle {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-warning);
+  text-transform: uppercase;
+  margin-bottom: var(--spacing-3);
+}
+
+.confirmMessage {
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-6);
+}
+
+.confirmButtons {
+  display: flex;
+  gap: var(--spacing-3);
+  justify-content: center;
+}
+
+.confirmButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2) var(--spacing-6);
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.confirmButtonCancel {
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: 1px solid var(--glass-border);
+}
+
+.confirmButtonCancel:hover {
+  border-color: var(--color-text-secondary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.confirmButtonConfirm {
+  color: var(--color-bg-primary);
+  background: var(--color-warning);
+  border: none;
+}
+
+.confirmButtonConfirm:hover {
+  filter: brightness(1.1);
+}
+
+.confirmButtonConfirm:focus-visible,
+.confirmButtonCancel:focus-visible {
+  outline: 2px solid var(--color-neon-cyan);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay {
+    animation: none;
+  }
+
+  .panel {
+    animation: none;
+  }
+
+  .loadingSpinner {
+    animation: none;
+  }
+
+  .confirmOverlay {
+    animation: none;
+  }
+
+  .confirmDialog {
+    animation: none;
+  }
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+
+@media (max-width: 640px) {
+  .overlay {
+    padding: var(--spacing-2);
+  }
+
+  .panel {
+    max-height: calc(100vh - var(--spacing-4));
+    border-radius: var(--radius-md);
+  }
+
+  .header {
+    padding: var(--spacing-3) var(--spacing-4);
+  }
+
+  .title {
+    font-size: var(--text-lg);
+  }
+
+  .content {
+    padding: var(--spacing-4);
+  }
+
+  .slotsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-3);
+  }
+
+  .instructions {
+    flex-direction: column;
+    font-size: var(--text-xs);
+  }
+
+  .confirmDialog {
+    padding: var(--spacing-4);
+  }
+
+  .confirmButtons {
+    flex-direction: column;
+  }
+}

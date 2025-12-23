@@ -1,0 +1,240 @@
+/* ============================================
+   ConsoleCarousel Component Styles
+   Horizontal carousel of console cards
+   ============================================ */
+
+.section {
+  padding: var(--spacing-8) 0;
+}
+
+/* ============================================
+   Carousel Container
+   ============================================ */
+
+.carousel {
+  display: flex;
+  gap: var(--spacing-4);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: var(--spacing-2) 0;
+}
+
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+
+/* ============================================
+   Console Card
+   ============================================ */
+
+.cardLink {
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  text-decoration: none;
+  color: inherit;
+}
+
+.card {
+  width: 180px;
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+  transition: all var(--transition-base);
+}
+
+.card:hover {
+  transform: translateY(-8px) scale(1.02);
+}
+
+.cardInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: var(--spacing-4);
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================
+   Console Icon
+   ============================================ */
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  margin-bottom: var(--spacing-4);
+  color: var(--console-color, var(--color-neon-cyan));
+  filter: drop-shadow(0 0 10px currentColor);
+  transition: all var(--transition-base);
+}
+
+.card:hover .iconWrapper {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 20px currentColor);
+}
+
+.consoleIcon {
+  width: 100%;
+  height: 100%;
+}
+
+/* ============================================
+   Card Content
+   ============================================ */
+
+.cardContent {
+  text-align: center;
+}
+
+.consoleName {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 var(--spacing-1) 0;
+  line-height: 1.2;
+}
+
+.gameCount {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--console-color, var(--color-text-secondary));
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ============================================
+   Glow Effect
+   ============================================ */
+
+.glowEffect {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: radial-gradient(
+    ellipse at center,
+    var(--console-color, var(--color-neon-cyan)) 0%,
+    transparent 70%
+  );
+  transition: opacity var(--transition-base);
+  z-index: 0;
+}
+
+.card:hover .glowEffect {
+  opacity: 0.1;
+}
+
+/* ============================================
+   Border Glow on Hover
+   ============================================ */
+
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(
+    135deg,
+    var(--console-color, var(--color-neon-cyan)) 0%,
+    transparent 50%,
+    var(--console-color, var(--color-neon-cyan)) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+  pointer-events: none;
+}
+
+.card:hover::before {
+  opacity: 0.5;
+}
+
+/* ============================================
+   Responsive Styles
+   ============================================ */
+
+@media (max-width: 768px) {
+  .section {
+    padding: var(--spacing-6) 0;
+  }
+
+  .carousel {
+    gap: var(--spacing-3);
+    padding: var(--spacing-2);
+  }
+
+  .card {
+    width: 150px;
+    height: 170px;
+  }
+
+  .iconWrapper {
+    width: 60px;
+    height: 60px;
+    margin-bottom: var(--spacing-3);
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: var(--spacing-4) 0;
+  }
+
+  .card {
+    width: 130px;
+    height: 150px;
+  }
+
+  .iconWrapper {
+    width: 50px;
+    height: 50px;
+  }
+
+  .consoleName {
+    font-size: var(--text-xs);
+  }
+
+  .gameCount {
+    font-size: 10px;
+  }
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel {
+    scroll-behavior: auto;
+  }
+
+  .card:hover {
+    transform: none;
+  }
+
+  .card:hover .iconWrapper {
+    transform: none;
+  }
+
+  .iconWrapper,
+  .glowEffect,
+  .card::before {
+    transition: none;
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-12-22T00:00:00Z",
+  "games": [
+    {
+      "id": "ps1-smackdown-2",
+      "title": "WWF SmackDown! 2: Know Your Role",
+      "console": "ps1",
+      "romPath": "roms/ps1/smackdown-2.chd",
+      "coverPath": "covers/ps1/smackdown-2.jpg",
+      "description": "The ultimate wrestling experience on PlayStation. Create your own wrestler and dominate the WWF!",
+      "releaseYear": 2000,
+      "genre": "fighting",
+      "players": 4,
+      "region": "US",
+      "developer": "Yuke's",
+      "publisher": "THQ",
+      "tags": ["wrestling", "wwf", "sports"],
+      "addedAt": "2025-12-22T00:00:00Z"
+    },
+    {
+      "id": "ps1-tekken-3",
+      "title": "Tekken 3",
+      "console": "ps1",
+      "romPath": "roms/ps1/tekken-3.chd",
+      "coverPath": "covers/ps1/tekken-3.jpg",
+      "description": "One of the greatest fighting games ever made. Master the Iron Fist Tournament.",
+      "releaseYear": 1998,
+      "genre": "fighting",
+      "players": 2,
+      "region": "US",
+      "developer": "Namco",
+      "publisher": "Namco",
+      "tags": ["fighting", "3d", "arcade"],
+      "addedAt": "2025-12-22T00:00:00Z"
+    }
+  ],
+  "metadata": {
+    "totalGames": 2,
+    "byConsole": {
+      "ps1": 2
+    },
+    "description": "Curated collection of classic retro games"
+  }
+}

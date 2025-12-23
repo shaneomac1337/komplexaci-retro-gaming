@@ -1,0 +1,186 @@
+/**
+ * LoadingOverlay Styles
+ * Cyberpunk-themed loading overlay with neon accents
+ */
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    135deg,
+    rgba(10, 10, 15, 0.98) 0%,
+    rgba(15, 15, 25, 0.98) 50%,
+    rgba(10, 10, 15, 0.98) 100%
+  );
+  z-index: 100;
+  overflow: hidden;
+}
+
+.content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+}
+
+/* Spinner */
+.spinnerContainer {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.spinner {
+  width: 100%;
+  height: 100%;
+  border: 3px solid rgba(0, 255, 255, 0.1);
+  border-top-color: #00ffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.spinnerInner {
+  position: absolute;
+  inset: 8px;
+  border: 3px solid rgba(255, 0, 255, 0.1);
+  border-bottom-color: #ff00ff;
+  border-radius: 50%;
+  animation: spin 1.5s linear reverse infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Game Name */
+.gameName {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  letter-spacing: 0.05em;
+}
+
+/* Progress Bar */
+.progressContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progressTrack {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 255, 255, 0.2);
+}
+
+.progressFill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    #00ffff 0%,
+    #00ccff 50%,
+    #00ffff 100%
+  );
+  border-radius: 4px;
+  transition: width 0.3s ease-out;
+}
+
+.progressGlow {
+  position: absolute;
+  top: -2px;
+  left: 0;
+  height: calc(100% + 4px);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 255, 255, 0.4) 100%
+  );
+  filter: blur(4px);
+  border-radius: 4px;
+  transition: width 0.3s ease-out;
+  pointer-events: none;
+}
+
+.progressText {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #00ffff;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+}
+
+/* Status Text */
+.status {
+  margin: 0;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  min-height: 1.25rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Scanlines Effect */
+.scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.1) 2px,
+    rgba(0, 0, 0, 0.1) 4px
+  );
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .content {
+    padding: 1.5rem;
+    gap: 1rem;
+  }
+
+  .spinnerContainer {
+    width: 60px;
+    height: 60px;
+  }
+
+  .gameName {
+    font-size: 1.25rem;
+  }
+
+  .progressTrack {
+    height: 6px;
+  }
+}

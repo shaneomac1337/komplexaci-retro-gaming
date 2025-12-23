@@ -1,0 +1,11 @@
+name = "r2-uploader"
+main = "r2-fetch-worker.js"
+compatibility_date = "2024-01-01"
+
+routes = [
+  { pattern = "upload.komplexaci.cz/*", zone_name = "komplexaci.cz" }
+]
+
+[[r2_buckets]]
+binding = "CDN_BUCKET"
+bucket_name = "komplexaci-media"

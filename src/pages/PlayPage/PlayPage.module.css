@@ -1,0 +1,146 @@
+/**
+ * PlayPage Styles
+ * Layout and styling for the main game playing page
+ */
+
+.play {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--spacing-6);
+  min-height: calc(100vh - 80px);
+  padding: var(--spacing-4);
+}
+
+/* Simple layout - just the emulator centered */
+.playSimple {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 80px);
+  padding: var(--spacing-4);
+  box-sizing: border-box;
+}
+
+.playSimple > * {
+  width: 100%;
+  max-width: 1200px;
+  max-height: calc(100vh - 100px);
+}
+
+/* Loading State */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: var(--spacing-4);
+  color: var(--color-text-muted);
+}
+
+.loadingSpinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-cyan);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Emulator Section */
+.emulatorSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Sidebar */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  height: fit-content;
+  position: sticky;
+  top: calc(80px + var(--spacing-4));
+}
+
+.sidebarActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  padding-top: var(--spacing-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.browseLink {
+  text-decoration: none;
+  width: 100%;
+}
+
+/* Mobile Layout */
+@media (max-width: 1024px) {
+  .play {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-4);
+  }
+
+  .sidebar {
+    position: static;
+    order: 2;
+  }
+
+  .emulatorSection {
+    order: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .play {
+    padding: var(--spacing-2);
+    gap: var(--spacing-3);
+  }
+
+  .sidebar {
+    padding: var(--spacing-3);
+  }
+
+  .sidebarActions {
+    gap: var(--spacing-2);
+    padding-top: var(--spacing-3);
+  }
+}
+
+/* Fullscreen Adjustments */
+.play:fullscreen,
+.play:-webkit-full-screen {
+  grid-template-columns: 1fr;
+  padding: 0;
+  background: var(--color-background);
+}
+
+.play:fullscreen .sidebar,
+.play:-webkit-full-screen .sidebar {
+  display: none;
+}
+
+.play:fullscreen .emulatorSection,
+.play:-webkit-full-screen .emulatorSection {
+  height: 100vh;
+  border-radius: 0;
+  border: none;
+}

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a0a"/>
+      <stop offset="50%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#0a0a0a"/>
+    </linearGradient>
+    <linearGradient id="fire" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff4500"/>
+      <stop offset="50%" style="stop-color:#ff6600"/>
+      <stop offset="100%" style="stop-color:#ffcc00"/>
+    </linearGradient>
+    <linearGradient id="silver" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#c0c0c0"/>
+      <stop offset="50%" style="stop-color:#ffffff"/>
+      <stop offset="100%" style="stop-color:#a0a0a0"/>
+    </linearGradient>
+    <filter id="glow2">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="300" height="400" fill="url(#bg2)"/>
+
+  <!-- Fire effect at bottom -->
+  <ellipse cx="150" cy="380" rx="140" ry="40" fill="url(#fire)" opacity="0.4"/>
+
+  <!-- Lightning bolts -->
+  <path d="M80 50 L90 100 L75 100 L95 160" stroke="#00ffff" stroke-width="3" fill="none" opacity="0.6"/>
+  <path d="M220 50 L210 100 L225 100 L205 160" stroke="#00ffff" stroke-width="3" fill="none" opacity="0.6"/>
+
+  <!-- TEKKEN text -->
+  <text x="150" y="120" font-family="Impact, sans-serif" font-size="52" fill="url(#silver)" text-anchor="middle" filter="url(#glow2)" letter-spacing="4">TEKKEN</text>
+
+  <!-- Large 3 -->
+  <text x="150" y="250" font-family="Impact, sans-serif" font-size="120" fill="url(#fire)" text-anchor="middle" filter="url(#glow2)">3</text>
+
+  <!-- Tagline -->
+  <text x="150" y="310" font-family="Arial, sans-serif" font-size="14" fill="#888888" text-anchor="middle" letter-spacing="2">THE KING OF IRON FIST</text>
+  <text x="150" y="330" font-family="Arial, sans-serif" font-size="14" fill="#888888" text-anchor="middle" letter-spacing="2">TOURNAMENT</text>
+
+  <!-- PlayStation badge -->
+  <rect x="100" y="355" width="100" height="30" rx="5" fill="#003087"/>
+  <text x="150" y="376" font-family="Arial, sans-serif" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="bold">PlayStation</text>
+
+  <!-- Decorative fist icons -->
+  <circle cx="40" cy="200" r="20" fill="none" stroke="#ff4500" stroke-width="2" opacity="0.5"/>
+  <circle cx="260" cy="200" r="20" fill="none" stroke="#ff4500" stroke-width="2" opacity="0.5"/>
+</svg>

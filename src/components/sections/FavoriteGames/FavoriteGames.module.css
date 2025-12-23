@@ -1,0 +1,24 @@
+/* ============================================
+   FavoriteGames Component Styles
+   Section for user's favorite games
+   ============================================ */
+
+.section {
+  padding: var(--spacing-8) 0;
+}
+
+/* ============================================
+   Responsive Styles
+   ============================================ */
+
+@media (max-width: 768px) {
+  .section {
+    padding: var(--spacing-6) 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: var(--spacing-4) 0;
+  }
+}

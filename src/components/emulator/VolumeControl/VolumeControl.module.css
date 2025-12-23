@@ -1,0 +1,190 @@
+/**
+ * VolumeControl Styles
+ * Neon cyan-themed volume control with slider and mute button
+ */
+
+.container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem;
+}
+
+/* Mute Button */
+.muteButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.8);
+  transition: all 0.2s ease;
+}
+
+.muteButton:hover {
+  background: rgba(0, 255, 255, 0.1);
+  color: #00ffff;
+}
+
+.muteButton:focus-visible {
+  outline: 2px solid #00ffff;
+  outline-offset: 2px;
+}
+
+.muteButton[aria-pressed="true"] {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.muteButton[aria-pressed="true"]:hover {
+  color: #00ffff;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+.icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Slider Container */
+.sliderContainer {
+  position: relative;
+  width: 100px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+/* Slider Track */
+.slider {
+  width: 100%;
+  height: 4px;
+  appearance: none;
+  -webkit-appearance: none;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+}
+
+.slider:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Slider Fill */
+.sliderFill {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 4px;
+  background: linear-gradient(90deg, #00ffff 0%, #00ccff 100%);
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 1;
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+}
+
+/* Slider Thumb - WebKit */
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  background: #00ffff;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+  transition: all 0.2s ease;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+}
+
+.slider:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.3), 0 0 15px rgba(0, 255, 255, 0.8);
+}
+
+.slider:disabled::-webkit-slider-thumb {
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* Slider Thumb - Firefox */
+.slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: #00ffff;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+  transition: all 0.2s ease;
+}
+
+.slider::-moz-range-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+}
+
+.slider:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.3), 0 0 15px rgba(0, 255, 255, 0.8);
+}
+
+.slider:disabled::-moz-range-thumb {
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* Firefox Track */
+.slider::-moz-range-track {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  height: 4px;
+}
+
+.slider::-moz-range-progress {
+  background: linear-gradient(90deg, #00ffff 0%, #00ccff 100%);
+  border-radius: 2px;
+  height: 4px;
+}
+
+/* Focus styles */
+.slider:focus-visible {
+  outline: none;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .sliderContainer {
+    width: 80px;
+  }
+
+  .muteButton {
+    width: 32px;
+    height: 32px;
+  }
+
+  .icon {
+    width: 18px;
+    height: 18px;
+  }
+}

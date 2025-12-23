@@ -1,0 +1,640 @@
+/* ============================================
+   CYBERPUNK RETRO GAMING - DESIGN SYSTEM
+   Global Styles & CSS Custom Properties
+   ============================================ */
+
+/* CSS Custom Properties */
+:root {
+  /* ========== Colors - Backgrounds ========== */
+  --color-bg-primary: #0a0a0f;
+  --color-bg-secondary: #1a1a2e;
+  --color-bg-tertiary: #16213e;
+
+  /* ========== Colors - Neon Accents ========== */
+  --color-neon-cyan: #00ffff;
+  --color-neon-magenta: #ff00ff;
+  --color-neon-purple: #9d4edd;
+  --color-neon-pink: #ff006e;
+  --color-neon-blue: #3a86ff;
+
+  /* ========== Colors - Text ========== */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #a0a0a0;
+  --color-text-muted: #6b6b6b;
+
+  /* ========== Colors - States ========== */
+  --color-success: #00ff88;
+  --color-warning: #ffaa00;
+  --color-error: #ff0055;
+  --color-info: #00ddff;
+
+  /* ========== Typography ========== */
+  --font-heading: 'Orbitron', sans-serif;
+  --font-body: 'Rajdhani', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --text-xs: 0.75rem;      /* 12px */
+  --text-sm: 0.875rem;     /* 14px */
+  --text-base: 1rem;       /* 16px */
+  --text-lg: 1.125rem;     /* 18px */
+  --text-xl: 1.25rem;      /* 20px */
+  --text-2xl: 1.5rem;      /* 24px */
+  --text-3xl: 1.875rem;    /* 30px */
+  --text-4xl: 2.25rem;     /* 36px */
+  --text-5xl: 3rem;        /* 48px */
+
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* ========== Spacing Scale ========== */
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;    /* 4px */
+  --spacing-2: 0.5rem;     /* 8px */
+  --spacing-3: 0.75rem;    /* 12px */
+  --spacing-4: 1rem;       /* 16px */
+  --spacing-5: 1.25rem;    /* 20px */
+  --spacing-6: 1.5rem;     /* 24px */
+  --spacing-8: 2rem;       /* 32px */
+  --spacing-10: 2.5rem;    /* 40px */
+  --spacing-12: 3rem;      /* 48px */
+  --spacing-16: 4rem;      /* 64px */
+  --spacing-20: 5rem;      /* 80px */
+  --spacing-24: 6rem;      /* 96px */
+
+  /* ========== Border Radius ========== */
+  --radius-sm: 0.25rem;    /* 4px */
+  --radius-md: 0.5rem;     /* 8px */
+  --radius-lg: 1rem;       /* 16px */
+  --radius-xl: 1.5rem;     /* 24px */
+  --radius-full: 9999px;
+
+  /* ========== Shadows ========== */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.6), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.7), 0 4px 6px -2px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.8), 0 10px 10px -5px rgba(0, 0, 0, 0.6);
+
+  /* ========== Neon Glow Shadows ========== */
+  --shadow-neon-cyan: 0 0 10px rgba(0, 255, 255, 0.5),
+                       0 0 20px rgba(0, 255, 255, 0.3),
+                       0 0 30px rgba(0, 255, 255, 0.1);
+
+  --shadow-neon-magenta: 0 0 10px rgba(255, 0, 255, 0.5),
+                          0 0 20px rgba(255, 0, 255, 0.3),
+                          0 0 30px rgba(255, 0, 255, 0.1);
+
+  --shadow-neon-purple: 0 0 10px rgba(157, 78, 221, 0.5),
+                         0 0 20px rgba(157, 78, 221, 0.3),
+                         0 0 30px rgba(157, 78, 221, 0.1);
+
+  --shadow-neon-pink: 0 0 10px rgba(255, 0, 110, 0.5),
+                       0 0 20px rgba(255, 0, 110, 0.3),
+                       0 0 30px rgba(255, 0, 110, 0.1);
+
+  --shadow-neon-blue: 0 0 10px rgba(58, 134, 255, 0.5),
+                       0 0 20px rgba(58, 134, 255, 0.3),
+                       0 0 30px rgba(58, 134, 255, 0.1);
+
+  /* ========== Transitions ========== */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ========== Z-Index Scale ========== */
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-tooltip: 700;
+
+  /* ========== Glassmorphism ========== */
+  --glass-bg: rgba(26, 26, 46, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-blur: 10px;
+
+  /* ========== Breakpoints (for JS usage) ========== */
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+/* ============================================
+   CSS Reset & Base Styles
+   ============================================ */
+
+/* Box sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Reset margins and padding */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* HTML & Body */
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--line-height-normal);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Typography Elements */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-4);
+}
+
+h1 {
+  font-size: var(--text-4xl);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+h2 {
+  font-size: var(--text-3xl);
+  letter-spacing: 0.05em;
+}
+
+h3 {
+  font-size: var(--text-2xl);
+  letter-spacing: 0.03em;
+}
+
+h4 {
+  font-size: var(--text-xl);
+  letter-spacing: 0.02em;
+}
+
+h5 {
+  font-size: var(--text-lg);
+}
+
+h6 {
+  font-size: var(--text-base);
+}
+
+p {
+  margin-bottom: var(--spacing-4);
+  line-height: var(--line-height-relaxed);
+}
+
+/* Links */
+a {
+  color: var(--color-neon-cyan);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+  cursor: pointer;
+}
+
+a:hover {
+  color: var(--color-neon-magenta);
+  text-shadow: var(--shadow-neon-cyan);
+}
+
+a:focus-visible {
+  outline: 2px solid var(--color-neon-cyan);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
+
+/* Buttons */
+button {
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+  transition: all var(--transition-base);
+}
+
+button:focus-visible {
+  outline: 2px solid var(--color-neon-cyan);
+  outline-offset: 4px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Form Elements */
+input,
+textarea,
+select {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-3) var(--spacing-4);
+  transition: all var(--transition-base);
+  width: 100%;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* Lists */
+ul, ol {
+  list-style-position: inside;
+  margin-bottom: var(--spacing-4);
+}
+
+li {
+  margin-bottom: var(--spacing-2);
+}
+
+/* Code */
+code,
+pre {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius-sm);
+}
+
+code {
+  padding: var(--spacing-1) var(--spacing-2);
+  color: var(--color-neon-cyan);
+}
+
+pre {
+  padding: var(--spacing-4);
+  overflow-x: auto;
+  margin-bottom: var(--spacing-4);
+}
+
+pre code {
+  padding: 0;
+  background: none;
+}
+
+/* Images */
+img,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* HR */
+hr {
+  border: none;
+  border-top: 1px solid var(--glass-border);
+  margin: var(--spacing-8) 0;
+}
+
+/* ============================================
+   Glassmorphism Components
+   ============================================ */
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-6);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
+}
+
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.glass-panel {
+  background: rgba(22, 33, 62, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-4);
+}
+
+.glass-header {
+  background: rgba(26, 26, 46, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--glass-border);
+  padding: var(--spacing-4) var(--spacing-6);
+}
+
+/* ============================================
+   Neon Glow Utilities
+   ============================================ */
+
+.neon-glow-cyan {
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.neon-glow-magenta {
+  box-shadow: var(--shadow-neon-magenta);
+}
+
+.neon-glow-purple {
+  box-shadow: var(--shadow-neon-purple);
+}
+
+.neon-glow-pink {
+  box-shadow: var(--shadow-neon-pink);
+}
+
+.neon-glow-blue {
+  box-shadow: var(--shadow-neon-blue);
+}
+
+/* Neon Text */
+.neon-text {
+  color: var(--color-neon-cyan);
+  text-shadow: var(--shadow-neon-cyan);
+}
+
+.neon-text-magenta {
+  color: var(--color-neon-magenta);
+  text-shadow: var(--shadow-neon-magenta);
+}
+
+.neon-text-purple {
+  color: var(--color-neon-purple);
+  text-shadow: var(--shadow-neon-purple);
+}
+
+.neon-text-pink {
+  color: var(--color-neon-pink);
+  text-shadow: var(--shadow-neon-pink);
+}
+
+.neon-text-blue {
+  color: var(--color-neon-blue);
+  text-shadow: var(--shadow-neon-blue);
+}
+
+/* Neon Borders */
+.neon-border-cyan {
+  border: 2px solid var(--color-neon-cyan);
+  box-shadow: inset var(--shadow-neon-cyan), var(--shadow-neon-cyan);
+}
+
+.neon-border-magenta {
+  border: 2px solid var(--color-neon-magenta);
+  box-shadow: inset var(--shadow-neon-magenta), var(--shadow-neon-magenta);
+}
+
+/* ============================================
+   Scrollbar Styling
+   ============================================ */
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-neon-cyan) var(--color-bg-secondary);
+}
+
+/* Webkit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-neon-cyan);
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--color-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neon-magenta);
+}
+
+/* ============================================
+   Selection
+   ============================================ */
+
+::selection {
+  background-color: var(--color-neon-cyan);
+  color: var(--color-bg-primary);
+}
+
+::-moz-selection {
+  background-color: var(--color-neon-cyan);
+  color: var(--color-bg-primary);
+}
+
+/* ============================================
+   Accessibility - Focus Visible
+   ============================================ */
+
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--color-neon-cyan);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
+
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ============================================
+   Responsive Typography
+   ============================================ */
+
+@media (min-width: 480px) {
+  :root {
+    --text-4xl: 2.5rem;    /* 40px */
+    --text-5xl: 3.5rem;    /* 56px */
+  }
+}
+
+@media (min-width: 768px) {
+  :root {
+    --text-4xl: 3rem;      /* 48px */
+    --text-5xl: 4rem;      /* 64px */
+  }
+
+  h1 {
+    font-size: var(--text-5xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --text-4xl: 3.5rem;    /* 56px */
+    --text-5xl: 4.5rem;    /* 72px */
+  }
+}
+
+/* ============================================
+   Container Utilities
+   ============================================ */
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--spacing-4);
+  padding-right: var(--spacing-4);
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-left: var(--spacing-6);
+    padding-right: var(--spacing-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-left: var(--spacing-8);
+    padding-right: var(--spacing-8);
+  }
+}
+
+.container-fluid {
+  width: 100%;
+  padding-left: var(--spacing-4);
+  padding-right: var(--spacing-4);
+}
+
+/* ============================================
+   EMULATORJS OVERRIDES
+   Ensure menus and popups display correctly
+   ============================================ */
+
+/* Ensure the player and its containers allow overflow */
+#emulator-player,
+#emulator-player > div {
+  overflow: visible !important;
+}
+
+/* EmulatorJS menu container - ensure proper z-index */
+#emulator-player [class*="ejs_menu"],
+#emulator-player [class*="ejs_settings"],
+#emulator-player [class*="ejs_popup"],
+#emulator-player [class*="ejs_dialog"] {
+  z-index: 99999 !important;
+}
+
+/* Ensure the settings panel is visible and can escape container */
+#emulator-player .ejs_settings_parent,
+#emulator-player .ejs_menu_bar,
+#emulator-player .ejs_context_menu {
+  z-index: 99999 !important;
+  overflow: visible !important;
+}
+
+/* Settings popup should use fixed positioning to escape all containers */
+#emulator-player .ejs_settings_popup,
+#emulator-player [class*="ejs_settings_popup"],
+#emulator-player [class*="settings_container"],
+#emulator-player [class*="ejs_modal"] {
+  position: fixed !important;
+  z-index: 99999 !important;
+}
+
+/* ============================================
+   EmulatorJS Canvas Performance Optimizations
+   For smooth frame pacing and reduced stuttering
+   ============================================ */
+
+/* Hardware-accelerated canvas rendering */
+#emulator-player canvas {
+  /* Force GPU acceleration */
+  transform: translateZ(0);
+  will-change: contents;
+  /* Optimize for crisp pixel art scaling */
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  /* Prevent sub-pixel rendering issues */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Ensure game container is optimized */
+#emulator-player #game,
+#emulator-player .ejs_game_container {
+  transform: translateZ(0);
+  will-change: transform;
+  /* Isolate compositing layer */
+  isolation: isolate;
+  contain: strict;
+}

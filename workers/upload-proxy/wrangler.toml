@@ -1,0 +1,11 @@
+name = "komplexaci-upload-proxy"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+
+routes = [
+  { pattern = "r2upload.komplexaci.cz/*", zone_name = "komplexaci.cz" }
+]
+
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "komplexaci-media"

@@ -1,0 +1,13 @@
+# Wrangler configuration for Cloudflare R2/Workers
+# Used to upload games.json to CDN
+
+name = "komplexaci-retro-gaming"
+compatibility_date = "2024-01-01"
+
+# R2 bucket binding
+[[r2_buckets]]
+binding = "CDN_BUCKET"
+bucket_name = "komplexaci-media"
+
+# Custom domain (if using Workers)
+# routes = [{ pattern = "cdn.komplexaci.cz/*", zone_name = "komplexaci.cz" }]

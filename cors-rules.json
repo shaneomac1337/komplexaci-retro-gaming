@@ -1,0 +1,11 @@
+{
+  "rules": [
+    {
+      "allowedOrigins": ["*"],
+      "allowedMethods": ["GET", "HEAD"],
+      "allowedHeaders": ["*"],
+      "exposeHeaders": ["Content-Length", "Content-Type"],
+      "maxAgeSeconds": 86400
+    }
+  ]
+}

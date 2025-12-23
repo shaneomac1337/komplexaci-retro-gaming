@@ -1,0 +1,544 @@
+/* ============================================
+   CYBERPUNK RETRO GAMING - ANIMATIONS
+   Keyframes & Animation Utilities
+   ============================================ */
+
+/* ============================================
+   Keyframe Animations
+   ============================================ */
+
+/* Pulsing Neon Glow */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+  50% {
+    opacity: 0.8;
+    filter: brightness(1.2);
+  }
+}
+
+/* Pulsing with scale */
+@keyframes pulse-scale {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+/* Subtle floating motion */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Float with rotation */
+@keyframes float-rotate {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(2deg);
+  }
+}
+
+/* Slide in from right */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Slide in from left */
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Slide in from top */
+@keyframes slideInTop {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Slide in from bottom */
+@keyframes slideInBottom {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Fade in */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Fade in up */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade in down */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scale in */
+@keyframes scaleIn {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Zoom in */
+@keyframes zoomIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* CRT Scanline effect */
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/* Glitch text effect */
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+    text-shadow: -2px 0 var(--color-neon-cyan), 2px 0 var(--color-neon-magenta);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+    text-shadow: -2px 0 var(--color-neon-magenta), 2px 0 var(--color-neon-cyan);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+    text-shadow: -2px 0 var(--color-neon-cyan), 2px 0 var(--color-neon-magenta);
+  }
+  60% {
+    transform: translate(2px, 2px);
+    text-shadow: -2px 0 var(--color-neon-magenta), 2px 0 var(--color-neon-cyan);
+  }
+  80% {
+    transform: translate(2px, -2px);
+    text-shadow: -2px 0 var(--color-neon-cyan), 2px 0 var(--color-neon-magenta);
+  }
+  100% {
+    transform: translate(0);
+    text-shadow: -2px 0 var(--color-neon-cyan), 2px 0 var(--color-neon-magenta);
+  }
+}
+
+/* Glitch subtle */
+@keyframes glitch-subtle {
+  0%, 90%, 100% {
+    transform: translate(0);
+    opacity: 1;
+  }
+  92% {
+    transform: translate(-1px, 1px);
+    opacity: 0.9;
+  }
+  94% {
+    transform: translate(1px, -1px);
+    opacity: 0.95;
+  }
+  96% {
+    transform: translate(-1px, -1px);
+    opacity: 0.9;
+  }
+  98% {
+    transform: translate(1px, 1px);
+    opacity: 0.95;
+  }
+}
+
+/* Rotate continuous */
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Spin */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Bounce */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(-25%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+/* Ping */
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* Neon flicker */
+@keyframes neon-flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    opacity: 1;
+    text-shadow: var(--shadow-neon-cyan);
+  }
+  20%, 24%, 55% {
+    opacity: 0.4;
+    text-shadow: none;
+  }
+}
+
+/* Border glow pulse */
+@keyframes border-glow {
+  0%, 100% {
+    border-color: var(--color-neon-cyan);
+    box-shadow: 0 0 10px var(--color-neon-cyan);
+  }
+  50% {
+    border-color: var(--color-neon-magenta);
+    box-shadow: 0 0 20px var(--color-neon-magenta);
+  }
+}
+
+/* Shimmer effect */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* ============================================
+   Animation Utility Classes
+   ============================================ */
+
+/* Pulse animations */
+.animate-pulse {
+  animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-pulse-scale {
+  animation: pulse-scale 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Float animations */
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-float-rotate {
+  animation: float-rotate 4s ease-in-out infinite;
+}
+
+/* Slide animations */
+.animate-slide-in-right {
+  animation: slideInRight 0.5s ease-out forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.5s ease-out forwards;
+}
+
+.animate-slide-in-top {
+  animation: slideInTop 0.5s ease-out forwards;
+}
+
+.animate-slide-in-bottom {
+  animation: slideInBottom 0.5s ease-out forwards;
+}
+
+/* Fade animations */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown 0.6s ease-out forwards;
+}
+
+/* Scale animations */
+.animate-scale-in {
+  animation: scaleIn 0.4s ease-out forwards;
+}
+
+.animate-zoom-in {
+  animation: zoomIn 0.5s ease-out forwards;
+}
+
+/* Special effects */
+.animate-glitch {
+  animation: glitch 0.3s linear infinite;
+}
+
+.animate-glitch-subtle {
+  animation: glitch-subtle 3s linear infinite;
+}
+
+.animate-scanline {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-scanline::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  animation: scanline 4s linear infinite;
+  pointer-events: none;
+}
+
+.animate-neon-flicker {
+  animation: neon-flicker 4s linear infinite;
+}
+
+.animate-border-glow {
+  animation: border-glow 3s ease-in-out infinite;
+}
+
+/* Rotation animations */
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animate-spin-slow {
+  animation: spin 3s linear infinite;
+}
+
+.animate-rotate {
+  animation: rotate 20s linear infinite;
+}
+
+/* Bounce and ping */
+.animate-bounce {
+  animation: bounce 1s infinite;
+}
+
+.animate-ping {
+  animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* ============================================
+   Animation Delays
+   ============================================ */
+
+.delay-75 {
+  animation-delay: 75ms;
+}
+
+.delay-100 {
+  animation-delay: 100ms;
+}
+
+.delay-150 {
+  animation-delay: 150ms;
+}
+
+.delay-200 {
+  animation-delay: 200ms;
+}
+
+.delay-300 {
+  animation-delay: 300ms;
+}
+
+.delay-500 {
+  animation-delay: 500ms;
+}
+
+.delay-700 {
+  animation-delay: 700ms;
+}
+
+.delay-1000 {
+  animation-delay: 1000ms;
+}
+
+/* ============================================
+   Animation Durations
+   ============================================ */
+
+.duration-75 {
+  animation-duration: 75ms;
+}
+
+.duration-100 {
+  animation-duration: 100ms;
+}
+
+.duration-150 {
+  animation-duration: 150ms;
+}
+
+.duration-200 {
+  animation-duration: 200ms;
+}
+
+.duration-300 {
+  animation-duration: 300ms;
+}
+
+.duration-500 {
+  animation-duration: 500ms;
+}
+
+.duration-700 {
+  animation-duration: 700ms;
+}
+
+.duration-1000 {
+  animation-duration: 1000ms;
+}
+
+/* ============================================
+   Hover Animations
+   ============================================ */
+
+.hover-glow:hover {
+  box-shadow: var(--shadow-neon-cyan);
+  transition: box-shadow var(--transition-base);
+}
+
+.hover-float:hover {
+  transform: translateY(-4px);
+  transition: transform var(--transition-base);
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+  transition: transform var(--transition-base);
+}
+
+.hover-scale-sm:hover {
+  transform: scale(1.02);
+  transition: transform var(--transition-base);
+}
+
+.hover-brightness:hover {
+  filter: brightness(1.2);
+  transition: filter var(--transition-base);
+}
+
+/* ============================================
+   Reduced Motion Override
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .animate-pulse,
+  .animate-float,
+  .animate-glitch,
+  .animate-scanline,
+  .animate-neon-flicker,
+  .animate-spin,
+  .animate-rotate,
+  .animate-bounce,
+  .animate-ping {
+    animation: none !important;
+  }
+
+  .animate-scanline::after {
+    display: none;
+  }
+}

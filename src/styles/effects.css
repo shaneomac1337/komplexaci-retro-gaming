@@ -1,0 +1,731 @@
+/* ============================================
+   ADVANCED VISUAL EFFECTS
+   CRT, Particles, Depth, and Immersive Effects
+   ============================================ */
+
+/* ============================================
+   CRT Monitor Effects
+   ============================================ */
+
+/* CRT Screen Curvature */
+.crt-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.crt-effect::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.15) 0px,
+      rgba(0, 0, 0, 0.15) 1px,
+      transparent 1px,
+      transparent 2px
+    );
+  pointer-events: none;
+  z-index: 1000;
+  animation: scanlineMove 8s linear infinite;
+}
+
+/* CRT Scanline Animation */
+@keyframes scanlineMove {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/* CRT Glow Effect */
+.crt-glow {
+  position: relative;
+  filter: contrast(1.1) brightness(1.05);
+}
+
+.crt-glow::after {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 255, 255, 0.1) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+  z-index: -1;
+  animation: crtGlowPulse 4s ease-in-out infinite;
+}
+
+@keyframes crtGlowPulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* CRT Flicker */
+.crt-flicker {
+  animation: crtFlicker 0.15s infinite;
+}
+
+@keyframes crtFlicker {
+  0% {
+    opacity: 0.97;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.98;
+  }
+}
+
+/* RGB Split Effect */
+.rgb-split {
+  position: relative;
+}
+
+.rgb-split::before,
+.rgb-split::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.rgb-split::before {
+  color: var(--color-neon-cyan);
+  animation: rgbShift1 2s infinite;
+  mix-blend-mode: screen;
+}
+
+.rgb-split::after {
+  color: var(--color-neon-magenta);
+  animation: rgbShift2 2s infinite;
+  mix-blend-mode: screen;
+}
+
+@keyframes rgbShift1 {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  33% {
+    transform: translate(-2px, 0);
+  }
+  66% {
+    transform: translate(2px, 0);
+  }
+}
+
+@keyframes rgbShift2 {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  33% {
+    transform: translate(2px, 0);
+  }
+  66% {
+    transform: translate(-2px, 0);
+  }
+}
+
+/* ============================================
+   Particle Effects
+   ============================================ */
+
+/* Floating Particles Background */
+.particles-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: var(--color-neon-cyan);
+  border-radius: 50%;
+  opacity: 0;
+  animation: particleFloat var(--duration, 10s) var(--delay, 0s) infinite;
+}
+
+.particle.magenta {
+  background: var(--color-neon-magenta);
+}
+
+.particle.purple {
+  background: var(--color-neon-purple);
+}
+
+@keyframes particleFloat {
+  0% {
+    opacity: 0;
+    transform: translateY(100vh) translateX(0) scale(0);
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-100px) translateX(var(--drift, 100px)) scale(1);
+  }
+}
+
+/* Neon Dust Effect */
+.neon-dust {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, rgba(0, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 60% 70%, rgba(255, 0, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 50% 50%, rgba(0, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 80% 10%, rgba(255, 0, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 90% 60%, rgba(0, 255, 255, 0.5), transparent);
+  background-size: 200% 200%;
+  background-position: 50% 50%;
+  animation: dustFloat 20s ease-in-out infinite;
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+@keyframes dustFloat {
+  0%, 100% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+}
+
+/* ============================================
+   Depth & Parallax Effects
+   ============================================ */
+
+/* Parallax Layer */
+.parallax-layer {
+  transform: translateZ(var(--depth, 0px)) scale(var(--scale, 1));
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* 3D Depth Container */
+.depth-container {
+  perspective: 1000px;
+  perspective-origin: 50% 50%;
+}
+
+/* Tilt Effect on Hover */
+.tilt-hover {
+  transform-style: preserve-3d;
+  transition: transform 0.2s ease-out;
+}
+
+.tilt-hover:hover {
+  transform: rotateX(var(--tilt-x, 5deg)) rotateY(var(--tilt-y, 5deg));
+}
+
+/* Layered Shadow Depth */
+.depth-shadow {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 4px 8px rgba(0, 0, 0, 0.2),
+    0 8px 16px rgba(0, 0, 0, 0.15),
+    0 16px 32px rgba(0, 0, 0, 0.1);
+}
+
+.depth-shadow-glow {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 4px 8px rgba(0, 255, 255, 0.1),
+    0 8px 16px rgba(255, 0, 255, 0.08),
+    0 16px 32px rgba(0, 255, 255, 0.05),
+    0 0 40px rgba(0, 255, 255, 0.15);
+}
+
+/* ============================================
+   Holographic Effects
+   ============================================ */
+
+/* Holographic Gradient Overlay */
+.holographic {
+  position: relative;
+  overflow: hidden;
+}
+
+.holographic::before {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  background: linear-gradient(
+    115deg,
+    transparent 20%,
+    rgba(0, 255, 255, 0.15) 30%,
+    rgba(255, 0, 255, 0.15) 40%,
+    transparent 50%
+  );
+  transform: translateX(-100%);
+  animation: holographicSheen 3s infinite;
+  pointer-events: none;
+}
+
+@keyframes holographicSheen {
+  0% {
+    transform: translateX(-100%) skewX(-15deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-15deg);
+  }
+}
+
+/* Iridescent Effect */
+.iridescent {
+  background: linear-gradient(
+    135deg,
+    var(--color-neon-cyan) 0%,
+    var(--color-neon-magenta) 25%,
+    var(--color-neon-purple) 50%,
+    var(--color-neon-pink) 75%,
+    var(--color-neon-cyan) 100%
+  );
+  background-size: 300% 300%;
+  animation: iridescentShift 6s ease-in-out infinite;
+}
+
+@keyframes iridescentShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* ============================================
+   Energy & Light Effects
+   ============================================ */
+
+/* Pulsing Energy Ring */
+.energy-ring {
+  position: relative;
+}
+
+.energy-ring::before {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  border: 2px solid var(--color-neon-cyan);
+  border-radius: inherit;
+  opacity: 0;
+  animation: energyPulse 2s infinite;
+  pointer-events: none;
+}
+
+@keyframes energyPulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+/* Light Beam */
+.light-beam {
+  position: relative;
+  overflow: hidden;
+}
+
+.light-beam::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom right,
+    transparent 40%,
+    rgba(0, 255, 255, 0.2) 50%,
+    transparent 60%
+  );
+  animation: beamRotate 8s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes beamRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Electric Arc Effect */
+.electric-arc {
+  position: relative;
+}
+
+.electric-arc::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-neon-cyan),
+    transparent
+  );
+  opacity: 0;
+  animation: electricZap 3s infinite;
+  pointer-events: none;
+}
+
+@keyframes electricZap {
+  0%, 90%, 100% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  91%, 93%, 95% {
+    opacity: 1;
+  }
+  92%, 94%, 96% {
+    opacity: 0.3;
+  }
+  96% {
+    transform: translateX(100%);
+  }
+}
+
+/* ============================================
+   Loading & Transition Effects
+   ============================================ */
+
+/* Data Stream Loading */
+.data-stream {
+  position: relative;
+  overflow: hidden;
+}
+
+.data-stream::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--color-neon-cyan) 5%,
+    transparent 10%,
+    transparent 90%,
+    var(--color-neon-magenta) 95%,
+    transparent 100%
+  );
+  background-size: 100% 200%;
+  animation: dataStreamFlow 2s linear infinite;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+@keyframes dataStreamFlow {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 0% 100%;
+  }
+}
+
+/* Matrix Rain Effect */
+.matrix-rain {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(transparent 50%, var(--color-neon-cyan) 50%),
+    linear-gradient(90deg, transparent 50%, var(--color-neon-cyan) 50%);
+  background-size: 2px 8px, 8px 2px;
+  background-position: 0 0, 0 0;
+  animation: matrixRainFall 20s linear infinite;
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+@keyframes matrixRainFall {
+  0% {
+    background-position: 0 0, 0 0;
+  }
+  100% {
+    background-position: 0 100vh, 100vw 0;
+  }
+}
+
+/* Pixel Dissolve Transition */
+@keyframes pixelDissolve {
+  0% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  50% {
+    opacity: 0.5;
+    filter: blur(4px) brightness(1.5);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(8px) brightness(2);
+    transform: scale(0.9);
+  }
+}
+
+.pixel-dissolve-enter {
+  animation: pixelDissolve 0.5s ease-out reverse;
+}
+
+.pixel-dissolve-exit {
+  animation: pixelDissolve 0.5s ease-out;
+}
+
+/* ============================================
+   Interactive Micro-Interactions
+   ============================================ */
+
+/* Magnetic Hover Effect */
+.magnetic-hover {
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.magnetic-hover:hover {
+  transform: scale(1.05) translateZ(10px);
+}
+
+/* Ripple Click Effect */
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(0, 255, 255, 0.4);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s, opacity 0.6s;
+  opacity: 0;
+}
+
+.ripple:active::after {
+  width: 300px;
+  height: 300px;
+  opacity: 1;
+  transition: 0s;
+}
+
+/* Neon Underline Grow */
+.neon-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.neon-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--color-neon-cyan);
+  box-shadow: 0 0 10px var(--color-neon-cyan);
+  transition: width 0.3s ease-out, left 0.3s ease-out;
+}
+
+.neon-underline:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+/* Glitch Button Effect */
+.glitch-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.glitch-button::before,
+.glitch-button::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+
+.glitch-button::before {
+  color: var(--color-neon-cyan);
+  animation: glitchButtonBefore 0.3s infinite;
+}
+
+.glitch-button::after {
+  color: var(--color-neon-magenta);
+  animation: glitchButtonAfter 0.3s infinite;
+}
+
+.glitch-button:hover::before,
+.glitch-button:hover::after {
+  opacity: 0.8;
+}
+
+@keyframes glitchButtonBefore {
+  0%, 100% {
+    transform: translate(0);
+  }
+  33% {
+    transform: translate(-2px, 2px);
+  }
+  66% {
+    transform: translate(2px, -2px);
+  }
+}
+
+@keyframes glitchButtonAfter {
+  0%, 100% {
+    transform: translate(0);
+  }
+  33% {
+    transform: translate(2px, -2px);
+  }
+  66% {
+    transform: translate(-2px, 2px);
+  }
+}
+
+/* ============================================
+   Ambient Background Animations
+   ============================================ */
+
+/* Animated Gradient Mesh */
+.gradient-mesh {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(0, 255, 255, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(255, 0, 255, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(157, 78, 221, 0.1) 0%, transparent 50%);
+  background-size: 200% 200%;
+  animation: gradientMeshMove 15s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes gradientMeshMove {
+  0%, 100% {
+    background-position: 0% 0%, 100% 100%, 50% 50%;
+  }
+  33% {
+    background-position: 50% 50%, 0% 100%, 100% 0%;
+  }
+  66% {
+    background-position: 100% 0%, 50% 50%, 0% 100%;
+  }
+}
+
+/* Noise Texture Overlay */
+.noise-texture {
+  position: relative;
+}
+
+.noise-texture::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+  opacity: 0.5;
+  pointer-events: none;
+  animation: noiseShift 1s steps(10) infinite;
+}
+
+@keyframes noiseShift {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  10% {
+    transform: translate(-5%, -5%);
+  }
+  20% {
+    transform: translate(-10%, 5%);
+  }
+  30% {
+    transform: translate(5%, -10%);
+  }
+  40% {
+    transform: translate(-5%, 10%);
+  }
+  50% {
+    transform: translate(10%, 5%);
+  }
+  60% {
+    transform: translate(5%, -5%);
+  }
+  70% {
+    transform: translate(-10%, -10%);
+  }
+  80% {
+    transform: translate(10%, 10%);
+  }
+  90% {
+    transform: translate(-5%, 5%);
+  }
+}
+
+/* ============================================
+   Reduced Motion Overrides
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .crt-effect::before,
+  .crt-glow::after,
+  .crt-flicker,
+  .rgb-split::before,
+  .rgb-split::after,
+  .particle,
+  .neon-dust,
+  .holographic::before,
+  .iridescent,
+  .energy-ring::before,
+  .light-beam::after,
+  .electric-arc::before,
+  .data-stream::before,
+  .matrix-rain,
+  .gradient-mesh,
+  .noise-texture::before {
+    animation: none !important;
+  }
+
+  .tilt-hover:hover {
+    transform: none;
+  }
+}

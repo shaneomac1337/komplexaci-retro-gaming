@@ -1,0 +1,249 @@
+/* ============================================
+   Button Component Styles
+   Cyberpunk-themed button with neon glow effects
+   ============================================ */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--color-neon-cyan);
+  outline-offset: 2px;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+/* ============================================
+   Variant: Primary
+   ============================================ */
+
+.primary {
+  color: var(--color-bg-primary);
+  background: linear-gradient(135deg, var(--color-neon-cyan), var(--color-neon-blue));
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.6),
+              0 0 40px rgba(0, 255, 255, 0.4);
+  filter: brightness(1.1);
+}
+
+.primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* ============================================
+   Variant: Secondary
+   ============================================ */
+
+.secondary {
+  color: var(--color-text-primary);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 2px solid var(--color-neon-magenta);
+  box-shadow: var(--shadow-neon-magenta);
+}
+
+.secondary:hover:not(:disabled) {
+  background: rgba(26, 26, 46, 0.8);
+  border-color: var(--color-neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+  transform: translateY(-2px);
+}
+
+.secondary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* ============================================
+   Variant: Ghost
+   ============================================ */
+
+.ghost {
+  color: var(--color-neon-cyan);
+  background: transparent;
+  border: 2px solid transparent;
+}
+
+.ghost:hover:not(:disabled) {
+  color: var(--color-neon-magenta);
+  border-color: var(--color-neon-magenta);
+  background: rgba(255, 0, 255, 0.1);
+}
+
+.ghost:active:not(:disabled) {
+  background: rgba(255, 0, 255, 0.2);
+}
+
+/* ============================================
+   Variant: Danger
+   ============================================ */
+
+.danger {
+  color: var(--color-text-primary);
+  background: linear-gradient(135deg, var(--color-error), #ff3366);
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+}
+
+.danger:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.6),
+              0 0 40px rgba(239, 68, 68, 0.4);
+  filter: brightness(1.1);
+}
+
+.danger:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* ============================================
+   Sizes
+   ============================================ */
+
+.sm {
+  padding: var(--spacing-2) var(--spacing-4);
+  font-size: var(--text-sm);
+}
+
+.md {
+  padding: var(--spacing-3) var(--spacing-6);
+  font-size: var(--text-base);
+}
+
+.lg {
+  padding: var(--spacing-4) var(--spacing-8);
+  font-size: var(--text-lg);
+}
+
+/* ============================================
+   Full Width
+   ============================================ */
+
+.fullWidth {
+  width: 100%;
+}
+
+/* ============================================
+   Loading State
+   ============================================ */
+
+.loading {
+  pointer-events: none;
+  position: relative;
+}
+
+.loading .content {
+  visibility: hidden;
+}
+
+.loadingSpinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: buttonSpin 0.8s linear infinite;
+}
+
+.sm .loadingSpinner {
+  width: 16px;
+  height: 16px;
+}
+
+.lg .loadingSpinner {
+  width: 24px;
+  height: 24px;
+}
+
+@keyframes buttonSpin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* ============================================
+   Content Wrapper
+   ============================================ */
+
+.content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+}
+
+/* ============================================
+   Icons
+   ============================================ */
+
+.iconLeft,
+.iconRight {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   Neon Glow Animation (on hover)
+   ============================================ */
+
+@keyframes neonPulse {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.2);
+  }
+}
+
+.button:hover:not(:disabled) {
+  animation: neonPulse 1.5s ease-in-out infinite;
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+
+  .button:hover:not(:disabled) {
+    animation: none;
+  }
+
+  .loadingSpinner {
+    animation: none;
+  }
+}

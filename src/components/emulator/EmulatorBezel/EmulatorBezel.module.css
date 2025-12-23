@@ -1,0 +1,698 @@
+/**
+ * EmulatorBezel Styles
+ * Arcade cabinet / CRT monitor aesthetic with cyberpunk neon accents
+ */
+
+.bezel {
+  --accent-color: #00ffff;
+  --bezel-bg: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 50%, #1a1a2e 100%);
+  --bezel-surface: #16162a;
+  --bezel-dark: #0a0a14;
+  --bezel-highlight: rgba(255, 255, 255, 0.05);
+  --bezel-shadow: rgba(0, 0, 0, 0.5);
+
+  position: relative;
+  background: var(--bezel-bg);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow:
+    0 0 0 2px var(--bezel-dark),
+    0 0 0 4px var(--bezel-surface),
+    0 0 40px rgba(0, 0, 0, 0.8),
+    0 0 20px color-mix(in srgb, var(--accent-color) 30%, transparent), /* Glow moved here from filter */
+    inset 0 2px 0 var(--bezel-highlight),
+    inset 0 -2px 0 var(--bezel-shadow);
+
+  /* NOTE: Removed filter: drop-shadow() because it creates a containing block
+     that breaks EmulatorJS settings popup positioning. Using box-shadow instead. */
+}
+
+/* ============================================
+   TOP BEZEL
+   ============================================ */
+
+.topBezel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 20px;
+  background: linear-gradient(180deg, var(--bezel-surface) 0%, var(--bezel-dark) 100%);
+  border-radius: 12px 12px 0 0;
+  margin-bottom: 15px;
+  border-bottom: 3px solid var(--bezel-dark);
+  box-shadow:
+    inset 0 1px 0 var(--bezel-highlight),
+    0 4px 8px var(--bezel-shadow);
+}
+
+.topLeft {
+  flex: 0 0 80px;
+}
+
+.topRight {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topCenter {
+  flex: 1;
+  text-align: center;
+}
+
+/* Vent lines decoration */
+.ventLines {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ventLines span {
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: var(--bezel-dark);
+  border-radius: 2px;
+  box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Logo area */
+.logoArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.brand {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--accent-color);
+  text-shadow:
+    0 0 10px var(--accent-color),
+    0 0 20px var(--accent-color);
+}
+
+.model {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  color: #666;
+  text-transform: uppercase;
+}
+
+/* Game title display */
+.gameTitle {
+  margin-top: 8px;
+  padding: 6px 16px;
+  background: var(--bezel-dark);
+  border-radius: 4px;
+  border: 1px solid #333;
+  text-align: center;
+}
+
+.nowPlaying {
+  display: block;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: #555;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.titleText {
+  display: block;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #00ff88;
+  text-shadow: 0 0 8px rgba(0, 255, 136, 0.5);
+  max-width: 300px;
+  margin: 0 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* LED indicators */
+.ledIndicators {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.led {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow:
+    inset 0 -2px 4px rgba(0, 0, 0, 0.5),
+    0 0 8px currentColor;
+}
+
+.led[data-status="power"] {
+  background: #00ff00;
+  color: #00ff00;
+  animation: ledPulse 2s ease-in-out infinite;
+}
+
+.led[data-status="active"] {
+  background: var(--accent-color);
+  color: var(--accent-color);
+  animation: ledBlink 0.5s ease-in-out infinite;
+}
+
+@keyframes ledPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes ledBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Gamepad indicator */
+.gamepadIndicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--bezel-dark);
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: #444;
+  font-size: 9px;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  cursor: help;
+}
+
+.gamepadIndicator.connected {
+  color: #00ff88;
+  border-color: #00ff88;
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+  animation: gamepadGlow 2s ease-in-out infinite;
+}
+
+.gamepadIcon {
+  width: 18px;
+  height: 18px;
+  opacity: 0.5;
+  transition: all 0.3s ease;
+}
+
+.gamepadIndicator.connected .gamepadIcon {
+  opacity: 1;
+  filter: drop-shadow(0 0 4px currentColor);
+}
+
+.gamepadStatus {
+  text-transform: uppercase;
+}
+
+@keyframes gamepadGlow {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+  }
+}
+
+/* ============================================
+   SCREEN AREA
+   ============================================ */
+
+.screenWrapper {
+  display: flex;
+  gap: 15px;
+}
+
+/* Side bezels */
+.sideBezel {
+  flex: 0 0 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 10px;
+  background: linear-gradient(180deg, var(--bezel-surface) 0%, var(--bezel-dark) 100%);
+  border-radius: 8px;
+  box-shadow:
+    inset 0 1px 0 var(--bezel-highlight),
+    inset 0 -1px 0 var(--bezel-shadow);
+}
+
+.leftBezel {
+  border-radius: 8px 0 0 8px;
+}
+
+.rightBezel {
+  border-radius: 0 8px 8px 0;
+}
+
+/* Side decoration stripes */
+.sideDecoration {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.stripe {
+  width: 30px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent-color) 0%, transparent 100%);
+  border-radius: 2px;
+  opacity: 0.6;
+}
+
+.rightBezel .stripe {
+  background: linear-gradient(90deg, transparent 0%, var(--accent-color) 100%);
+}
+
+/* Speaker grill */
+.speakerGrill {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 5px;
+  background: var(--bezel-dark);
+  border-radius: 4px;
+}
+
+.grillLine {
+  width: 100%;
+  height: 2px;
+  background: #222;
+  border-radius: 1px;
+}
+
+/* Screen container */
+.screenContainer {
+  flex: 1;
+  position: relative;
+  background: #000;
+  border-radius: 8px;
+  overflow: visible;
+  box-shadow:
+    inset 0 0 50px rgba(0, 0, 0, 0.8),
+    0 0 0 3px #111,
+    0 0 0 5px #222,
+    0 0 0 7px #111;
+  /* Maintain 4:3 aspect ratio for retro games */
+  aspect-ratio: 4 / 3;
+  min-height: 400px;
+}
+
+.screenInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.screenContent {
+  position: relative;
+  z-index: 20;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Make EmulatorContainer fill the screen area */
+.screenContent > * {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Screen frame glow - decorative only, behind content */
+.screenFrame {
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 30px rgba(0, 255, 255, 0.1),
+    inset 0 0 60px rgba(0, 0, 0, 0.5);
+  z-index: -1; /* Behind screen content */
+}
+
+/* CRT overlay effects - behind content but adds visual flair */
+.crtOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1; /* Behind screen content */
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 1px,
+    rgba(0, 0, 0, 0.15) 1px,
+    rgba(0, 0, 0, 0.15) 2px
+  );
+  opacity: 0.5;
+}
+
+.screenGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    transparent 60%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+}
+
+/* ============================================
+   BOTTOM BEZEL
+   ============================================ */
+
+.bottomBezel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 20px;
+  background: linear-gradient(180deg, var(--bezel-dark) 0%, var(--bezel-surface) 100%);
+  border-radius: 0 0 12px 12px;
+  margin-top: 15px;
+  border-top: 3px solid var(--bezel-dark);
+  box-shadow:
+    inset 0 -1px 0 var(--bezel-highlight),
+    0 -4px 8px var(--bezel-shadow);
+}
+
+.bottomLeft,
+.bottomRight {
+  flex: 0 0 100px;
+}
+
+.bottomCenter {
+  flex: 1;
+  text-align: center;
+}
+
+/* Port labels */
+.portLabel {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #444;
+  padding: 6px 12px;
+  background: var(--bezel-dark);
+  border-radius: 4px;
+  border: 1px solid #333;
+  text-align: center;
+}
+
+.bottomRight .portLabel {
+  text-align: center;
+}
+
+/* Control hints */
+.controlHints {
+  display: flex;
+  justify-content: center;
+}
+
+.keyboardHelp {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 20px;
+}
+
+.keyHint {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 10px;
+  color: #555;
+  letter-spacing: 0.5px;
+}
+
+.keyHint kbd {
+  display: inline-block;
+  padding: 2px 5px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 600;
+  color: #00ffff;
+  background: var(--bezel-dark);
+  border: 1px solid #333;
+  border-radius: 3px;
+  box-shadow: 0 1px 0 #222;
+}
+
+/* ============================================
+   CORNER DECORATIONS
+   ============================================ */
+
+.corner {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  pointer-events: none;
+}
+
+.corner::before,
+.corner::after {
+  content: '';
+  position: absolute;
+  background: var(--accent-color);
+  opacity: 0.3;
+}
+
+.cornerTL {
+  top: 8px;
+  left: 8px;
+}
+
+.cornerTL::before {
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 3px;
+}
+
+.cornerTL::after {
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 20px;
+}
+
+.cornerTR {
+  top: 8px;
+  right: 8px;
+}
+
+.cornerTR::before {
+  top: 0;
+  right: 0;
+  width: 20px;
+  height: 3px;
+}
+
+.cornerTR::after {
+  top: 0;
+  right: 0;
+  width: 3px;
+  height: 20px;
+}
+
+.cornerBL {
+  bottom: 8px;
+  left: 8px;
+}
+
+.cornerBL::before {
+  bottom: 0;
+  left: 0;
+  width: 20px;
+  height: 3px;
+}
+
+.cornerBL::after {
+  bottom: 0;
+  left: 0;
+  width: 3px;
+  height: 20px;
+}
+
+.cornerBR {
+  bottom: 8px;
+  right: 8px;
+}
+
+.cornerBR::before {
+  bottom: 0;
+  right: 0;
+  width: 20px;
+  height: 3px;
+}
+
+.cornerBR::after {
+  bottom: 0;
+  right: 0;
+  width: 3px;
+  height: 20px;
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 900px) {
+  .bezel {
+    padding: 15px;
+    border-radius: 16px;
+  }
+
+  .topBezel,
+  .bottomBezel {
+    padding: 10px 15px;
+  }
+
+  .sideBezel {
+    flex: 0 0 35px;
+    padding: 15px 5px;
+  }
+
+  .brand {
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+
+  .gameTitle {
+    display: none;
+  }
+
+  .speakerGrill {
+    display: none;
+  }
+
+  .gamepadStatus {
+    display: none;
+  }
+
+  .keyboardHelp {
+    gap: 8px 15px;
+  }
+
+  .keyHint {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 600px) {
+  .bezel {
+    padding: 10px;
+    border-radius: 12px;
+  }
+
+  .topBezel,
+  .bottomBezel {
+    padding: 8px 10px;
+    margin-bottom: 10px;
+  }
+
+  .bottomBezel {
+    margin-top: 10px;
+  }
+
+  .sideBezel {
+    display: none;
+  }
+
+  .screenWrapper {
+    gap: 0;
+  }
+
+  .screenContainer {
+    min-height: 250px;
+  }
+
+  .topLeft,
+  .topRight,
+  .bottomLeft,
+  .bottomRight {
+    display: none;
+  }
+
+  .brand {
+    font-size: 11px;
+  }
+
+  .model {
+    font-size: 9px;
+  }
+
+  .controlHints {
+    gap: 15px;
+  }
+
+  .keyboardHelp {
+    gap: 6px 12px;
+  }
+
+  .keyHint {
+    font-size: 8px;
+  }
+
+  .keyHint kbd {
+    padding: 1px 3px;
+    font-size: 7px;
+  }
+
+  .corner {
+    display: none;
+  }
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@media (prefers-reduced-motion: no-preference) {
+  .bezel {
+    animation: bezelStartup 0.5s ease-out;
+  }
+
+  @keyframes bezelStartup {
+    from {
+      opacity: 0;
+      transform: scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .screenGlow {
+    animation: screenFlicker 4s ease-in-out infinite;
+  }
+
+  @keyframes screenFlicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.95; }
+    51% { opacity: 1; }
+    52% { opacity: 0.97; }
+  }
+}

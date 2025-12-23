@@ -1,0 +1,186 @@
+/* ============================================
+   Quick Save Indicator Component Styles
+   Brief notification for save/load operations
+   ============================================ */
+
+/* ============================================
+   Container
+   ============================================ */
+
+.container {
+  position: fixed;
+  top: var(--spacing-6);
+  right: var(--spacing-6);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-5);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-radius: var(--radius-lg);
+  z-index: var(--z-tooltip);
+  pointer-events: none;
+  animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 1.7s forwards;
+}
+
+.container.hidden {
+  display: none;
+}
+
+/* ============================================
+   Type Variants
+   ============================================ */
+
+.save {
+  border: 2px solid var(--color-neon-magenta);
+  box-shadow: var(--shadow-neon-magenta);
+}
+
+.load {
+  border: 2px solid var(--color-neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+/* ============================================
+   Icon
+   ============================================ */
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.save .icon {
+  color: var(--color-neon-magenta);
+  filter: drop-shadow(0 0 4px var(--color-neon-magenta));
+}
+
+.load .icon {
+  color: var(--color-neon-cyan);
+  filter: drop-shadow(0 0 4px var(--color-neon-cyan));
+}
+
+/* ============================================
+   Text
+   ============================================ */
+
+.text {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-primary);
+}
+
+.slotNumber {
+  font-weight: var(--font-weight-bold);
+}
+
+.save .slotNumber {
+  color: var(--color-neon-magenta);
+}
+
+.load .slotNumber {
+  color: var(--color-neon-cyan);
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Progress bar for visual feedback */
+.progressBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--color-bg-tertiary);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  animation: shrink 2s linear forwards;
+}
+
+.save .progressFill {
+  background: var(--color-neon-magenta);
+}
+
+.load .progressFill {
+  background: var(--color-neon-cyan);
+}
+
+@keyframes shrink {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .container {
+    animation: fadeIn 0.1s ease-out;
+  }
+
+  .progressFill {
+    animation: none;
+    width: 0;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+
+@media (max-width: 640px) {
+  .container {
+    top: var(--spacing-4);
+    right: var(--spacing-4);
+    padding: var(--spacing-2) var(--spacing-4);
+  }
+
+  .text {
+    font-size: var(--text-xs);
+  }
+}

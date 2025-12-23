@@ -1,0 +1,245 @@
+/* ============================================
+   Modal Component Styles
+   Cyberpunk-themed modal with backdrop blur
+   ============================================ */
+
+/* ============================================
+   Overlay (Backdrop)
+   ============================================ */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal-backdrop);
+  padding: var(--spacing-4);
+  animation: overlayFadeIn 0.2s ease-out;
+}
+
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   Modal Container
+   ============================================ */
+
+.modal {
+  background: var(--color-bg-secondary);
+  border: 2px solid var(--color-neon-cyan);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-neon-cyan), var(--shadow-xl);
+  position: relative;
+  z-index: var(--z-modal);
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - var(--spacing-8));
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ============================================
+   Size Variants
+   ============================================ */
+
+.sm {
+  width: 100%;
+  max-width: 400px;
+}
+
+.md {
+  width: 100%;
+  max-width: 600px;
+}
+
+.lg {
+  width: 100%;
+  max-width: 800px;
+}
+
+.fullscreen {
+  width: 100%;
+  max-width: none;
+  height: 100vh;
+  max-height: none;
+  border-radius: 0;
+  margin: 0;
+}
+
+/* ============================================
+   Header
+   ============================================ */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-4) var(--spacing-6);
+  border-bottom: 1px solid var(--glass-border);
+  flex-shrink: 0;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neon-cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+/* ============================================
+   Close Button
+   ============================================ */
+
+.closeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.closeButton:hover {
+  color: var(--color-neon-magenta);
+  border-color: var(--color-neon-magenta);
+  background: rgba(255, 0, 255, 0.1);
+}
+
+.closeButton:focus-visible {
+  outline: none;
+  border-color: var(--color-neon-cyan);
+  box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.3);
+}
+
+/* ============================================
+   Content
+   ============================================ */
+
+.content {
+  padding: var(--spacing-6);
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-neon-cyan) var(--color-bg-secondary);
+}
+
+.content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.content::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+}
+
+.content::-webkit-scrollbar-thumb {
+  background: var(--color-neon-cyan);
+  border-radius: var(--radius-sm);
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neon-magenta);
+}
+
+/* Content without header */
+.contentNoHeader {
+  padding-top: var(--spacing-8);
+}
+
+/* ============================================
+   Neon Border Glow Animation
+   ============================================ */
+
+@keyframes borderPulse {
+  0%, 100% {
+    border-color: var(--color-neon-cyan);
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3),
+                0 0 20px rgba(0, 255, 255, 0.2),
+                var(--shadow-xl);
+  }
+  50% {
+    border-color: var(--color-neon-magenta);
+    box-shadow: 0 0 10px rgba(255, 0, 255, 0.3),
+                0 0 20px rgba(255, 0, 255, 0.2),
+                var(--shadow-xl);
+  }
+}
+
+.modal:focus-within {
+  animation: borderPulse 3s ease-in-out infinite;
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay {
+    animation: none;
+  }
+
+  .modal {
+    animation: none;
+  }
+
+  .modal:focus-within {
+    animation: none;
+  }
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+
+@media (max-width: 640px) {
+  .overlay {
+    padding: var(--spacing-2);
+  }
+
+  .sm,
+  .md,
+  .lg {
+    max-width: 100%;
+    max-height: calc(100vh - var(--spacing-4));
+  }
+
+  .header {
+    padding: var(--spacing-3) var(--spacing-4);
+  }
+
+  .content {
+    padding: var(--spacing-4);
+  }
+
+  .title {
+    font-size: var(--text-lg);
+  }
+}

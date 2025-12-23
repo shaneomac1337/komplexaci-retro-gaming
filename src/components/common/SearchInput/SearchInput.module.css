@@ -1,0 +1,188 @@
+/* ============================================
+   SearchInput Component Styles
+   Cyberpunk-styled search input with neon effects
+   ============================================ */
+
+.container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+/* ============================================
+   Input Field
+   ============================================ */
+
+.input {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-text-primary);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 2px solid var(--glass-border);
+  border-radius: var(--radius-full);
+  padding: var(--spacing-3) var(--spacing-12);
+  transition: all var(--transition-base);
+}
+
+.input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.input:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-neon-cyan);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.3),
+              0 0 30px rgba(0, 255, 255, 0.1);
+}
+
+/* When input has value */
+.input:not(:placeholder-shown) {
+  padding-right: var(--spacing-12);
+}
+
+/* ============================================
+   Search Icon
+   ============================================ */
+
+.searchIcon {
+  position: absolute;
+  left: var(--spacing-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-neon-cyan);
+  pointer-events: none;
+  transition: all var(--transition-base);
+}
+
+.input:focus ~ .searchIcon,
+.container:focus-within .searchIcon {
+  color: var(--color-neon-cyan);
+  filter: drop-shadow(0 0 4px var(--color-neon-cyan));
+}
+
+/* ============================================
+   Clear Button
+   ============================================ */
+
+.clearButton {
+  position: absolute;
+  right: var(--spacing-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-full);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  opacity: 0;
+  visibility: hidden;
+}
+
+.clearButton.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.clearButton:hover {
+  color: var(--color-neon-magenta);
+  border-color: var(--color-neon-magenta);
+  background: rgba(255, 0, 255, 0.1);
+}
+
+.clearButton:focus-visible {
+  outline: none;
+  color: var(--color-neon-cyan);
+  border-color: var(--color-neon-cyan);
+  box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.3);
+}
+
+.clearButton:active {
+  transform: scale(0.95);
+}
+
+/* ============================================
+   Loading State
+   ============================================ */
+
+.loadingIndicator {
+  position: absolute;
+  left: var(--spacing-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loadingSpinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid transparent;
+  border-top-color: var(--color-neon-cyan);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Hide search icon when loading */
+.container.loading .searchIcon {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* ============================================
+   Neon Glow Animation (on focus)
+   ============================================ */
+
+@keyframes inputGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3),
+                0 0 30px rgba(0, 255, 255, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.4),
+                0 0 40px rgba(0, 255, 255, 0.2);
+  }
+}
+
+.input:focus {
+  animation: inputGlow 2s ease-in-out infinite;
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .input,
+  .searchIcon,
+  .clearButton {
+    transition: none;
+  }
+
+  .input:focus {
+    animation: none;
+  }
+
+  .loadingSpinner {
+    animation: none;
+    opacity: 0.7;
+  }
+}

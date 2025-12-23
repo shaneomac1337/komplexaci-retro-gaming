@@ -1,0 +1,160 @@
+/**
+ * MainLayout Component Styles
+ * CSS Grid-based responsive layout
+ */
+
+/* Base layout using CSS Grid */
+.layout {
+  display: grid;
+  grid-template-areas:
+    'header header'
+    'sidebar main'
+    'footer footer';
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  background: linear-gradient(
+    135deg,
+    #0a0a1a 0%,
+    #0f0f2d 50%,
+    #0a0a1a 100%
+  );
+}
+
+/* Collapsed sidebar layout */
+.layoutCollapsed {
+  grid-template-columns: 72px 1fr;
+}
+
+/* Mobile layout - sidebar hidden by default */
+.layoutMobile {
+  grid-template-areas:
+    'header'
+    'main'
+    'footer';
+  grid-template-columns: 1fr;
+}
+
+/* Header grid area */
+.layout > header {
+  grid-area: header;
+}
+
+/* Sidebar grid area */
+.layout > aside {
+  grid-area: sidebar;
+}
+
+/* Mobile: sidebar is fixed overlay, not in grid */
+.layoutMobile > aside {
+  grid-area: unset;
+}
+
+/* Main content grid area */
+.main {
+  grid-area: main;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Main content container */
+.mainContent {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 255, 255, 0.3) rgba(0, 0, 0, 0.2);
+}
+
+.mainContent::-webkit-scrollbar {
+  width: 8px;
+}
+
+.mainContent::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.mainContent::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+.mainContent::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 255, 0.5);
+}
+
+/* Footer grid area */
+.layout > footer {
+  grid-area: footer;
+}
+
+/* Background decoration - subtle grid pattern */
+.layout::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: linear-gradient(
+      rgba(0, 255, 255, 0.03) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(0, 255, 255, 0.03) 1px,
+      transparent 1px
+    );
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .mainContent {
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .mainContent {
+    padding: 1.25rem;
+  }
+
+  .layoutCollapsed {
+    grid-template-columns: 64px 1fr;
+  }
+}
+
+@media (min-width: 1400px) {
+  .mainContent {
+    padding: 2rem;
+  }
+}
+
+/* Skip to main content link (accessibility) */
+.skipLink {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  padding: 8px 16px;
+  background: #00ffff;
+  color: #0a0a1a;
+  font-weight: 600;
+  text-decoration: none;
+  z-index: 1000;
+  transition: top 0.25s ease;
+}
+
+.skipLink:focus {
+  top: 0;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .skipLink {
+    transition: none;
+  }
+}

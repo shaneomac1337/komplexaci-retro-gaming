@@ -1,0 +1,190 @@
+/* ============================================
+   Gamepad Indicator Component Styles
+   Small indicator showing gamepad connection status
+   ============================================ */
+
+/* ============================================
+   Container
+   ============================================ */
+
+.container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================
+   Indicator Button
+   ============================================ */
+
+.indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  cursor: default;
+  transition: all var(--transition-base);
+}
+
+.indicator.connected {
+  border-color: var(--color-success);
+  color: var(--color-success);
+  cursor: pointer;
+}
+
+.indicatorIcon {
+  transition: all var(--transition-base);
+}
+
+/* ============================================
+   Connected Animation
+   ============================================ */
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(0, 255, 136, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.6);
+  }
+}
+
+.indicator.connected {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+/* ============================================
+   Status Dot
+   ============================================ */
+
+.statusDot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-text-muted);
+  border: 2px solid var(--color-bg-secondary);
+}
+
+.statusDot.connected {
+  background: var(--color-success);
+  animation: dotPulse 2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+/* ============================================
+   Tooltip
+   ============================================ */
+
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + var(--spacing-2));
+  left: 50%;
+  transform: translateX(-50%);
+  padding: var(--spacing-2) var(--spacing-3);
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-fast);
+  pointer-events: none;
+  z-index: var(--z-tooltip);
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--color-bg-tertiary);
+}
+
+.container:hover .tooltip,
+.container:focus-within .tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+.tooltipTitle {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-neon-cyan);
+  margin-bottom: var(--spacing-1);
+}
+
+.tooltipStatus {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+}
+
+.tooltipStatus.connected {
+  color: var(--color-success);
+}
+
+.tooltipStatus.disconnected {
+  color: var(--color-text-muted);
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .indicator.connected {
+    animation: none;
+  }
+
+  .statusDot.connected {
+    animation: none;
+  }
+
+  .indicator,
+  .indicatorIcon,
+  .tooltip {
+    transition: none;
+  }
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+
+@media (max-width: 640px) {
+  .indicator {
+    width: 32px;
+    height: 32px;
+  }
+
+  .statusDot {
+    width: 8px;
+    height: 8px;
+  }
+
+  .tooltip {
+    font-size: 0.65rem;
+    padding: var(--spacing-1) var(--spacing-2);
+  }
+}
