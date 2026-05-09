@@ -8,11 +8,38 @@
 
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useEmulator } from '@/hooks/useEmulator';
+import { useLocalStorageBoolean } from '@/hooks/useLocalStorage';
+import { useToastActions } from '@/hooks/useToast';
 import { useEmulatorStore } from '@/stores/emulatorStore';
 import { LoadingOverlay } from '../LoadingOverlay';
 import { ErrorOverlay } from '../ErrorOverlay';
 import type { Game } from '@/types';
 import styles from './EmulatorContainer.module.css';
+
+/**
+ * Measure the display refresh rate by counting rAF callbacks over `durationMs`.
+ * Resolves to frames-per-second. Used to decide whether to nudge the user
+ * toward low-latency fullscreen on high-Hz displays.
+ */
+function measureRefreshRate(durationMs = 500): Promise<number> {
+  return new Promise((resolve) => {
+    let frames = 0;
+    const start = performance.now();
+    const tick = () => {
+      frames += 1;
+      const elapsed = performance.now() - start;
+      if (elapsed >= durationMs) {
+        resolve((frames / elapsed) * 1000);
+        return;
+      }
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+}
+
+const HIGH_REFRESH_THRESHOLD_HZ = 120;
+const LOW_LATENCY_TIP_SEEN_KEY = 'tip:low-latency-fullscreen-seen';
 
 export interface EmulatorContainerProps {
   /** Game to load and play */
@@ -61,6 +88,10 @@ function EmulatorContainerComponent({
   const loadGame = useEmulatorStore((state) => state.loadGame);
   const unloadGame = useEmulatorStore((state) => state.unloadGame);
   const storeVolume = useEmulatorStore((state) => state.volume);
+
+  // Toast actions and persistent tip-seen flag (for low-latency fullscreen nudge)
+  const toast = useToastActions();
+  const [tipSeen, setTipSeen] = useLocalStorageBoolean(LOW_LATENCY_TIP_SEEN_KEY, false);
 
   /**
    * Complete the loading sequence - called when emulator is ready or game starts.
@@ -228,10 +259,25 @@ function EmulatorContainerComponent({
         return;
       }
 
-      // F key - Toggle EmulatorJS fullscreen
+      // F = standard fullscreen, Shift+F = low-latency (canvas-only) fullscreen for VRR
       if (event.key === 'f' || event.key === 'F') {
         event.preventDefault();
-        toggleFullscreen();
+        const lowLatency = event.shiftKey;
+        toggleFullscreen({ lowLatency });
+
+        // First time the user enters standard fullscreen on a high-refresh display,
+        // nudge them toward Shift+F. One shot, persisted across sessions.
+        if (!lowLatency && !tipSeen) {
+          measureRefreshRate().then((hz) => {
+            if (hz >= HIGH_REFRESH_THRESHOLD_HZ) {
+              toast.info(
+                `Tip: Shift+F enables low-latency fullscreen — smoother on your ${Math.round(hz)}Hz display (great with VRR/FreeSync).`,
+                7000,
+              );
+              setTipSeen(true);
+            }
+          });
+        }
         return;
       }
 
@@ -248,7 +294,7 @@ function EmulatorContainerComponent({
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isReady, toggleFullscreen, toggleMenu]);
+  }, [isReady, toggleFullscreen, toggleMenu, tipSeen, setTipSeen, toast]);
 
   // Handle retry
   const handleRetry = useCallback(() => {

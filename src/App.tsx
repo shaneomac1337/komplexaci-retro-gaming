@@ -6,6 +6,7 @@ import { Suspense, lazy, useEffect, Component, type ReactNode } from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { useGameStore } from './stores';
 import { ImmersiveHome } from './components/home';
+import { ToastContainer } from './components/common';
 // Direct import for PlayPage to avoid lazy loading issues
 import { PlayPage } from './pages/PlayPage';
 
@@ -231,6 +232,7 @@ function App() {
           />
         </Routes>
       </BrowserRouter>
+      <ToastContainer position="bottom-right" />
     </ErrorBoundary>
   );
 }

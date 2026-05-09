@@ -61,6 +61,8 @@ const BASE_MAPPINGS: MappingSection[] = [
       { action: 'Quick Load', keys: ['2'] },
       { action: 'Change Save Slot', keys: ['3'] },
       { action: 'EmulatorJS Menu', keys: ['Esc'] },
+      { action: 'Fullscreen', keys: ['F'] },
+      { action: 'Fullscreen (low-latency, for VRR/high-Hz)', keys: ['Shift+F'] },
     ],
   },
 ];

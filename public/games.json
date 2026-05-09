@@ -6,7 +6,7 @@
       "id": "ps1-crash-bash",
       "title": "Crash Bash",
       "console": "ps1",
-      "romPath": "https://cdn.komplexaci.cz/roms/ps1/crash-bash.chd",
+      "romPath": "https://cdn.komplexaci.cz/roms/ps1/crash-bash.zip",
       "coverPath": "https://cdn.komplexaci.cz/covers/ps1/crash-bash.jpg",
       "description": "Crash Bandicoot's first party game! Compete in wacky mini-games with friends or battle against Uka Uka's team.",
       "releaseYear": 2000,
@@ -49,12 +49,29 @@
       "publisher": "Namco",
       "tags": ["fighting", "3d", "arcade"],
       "addedAt": "2025-12-22T00:00:00Z"
+    },
+    {
+      "id": "n64-wwf-no-mercy",
+      "title": "WWF No Mercy",
+      "console": "n64",
+      "romPath": "https://cdn.komplexaci.cz/roms/n64/wwf-no-mercy.z64",
+      "coverPath": "https://cdn.komplexaci.cz/covers/n64/wwf-no-mercy.jpg",
+      "description": "The legendary AKI wrestling game on N64. Considered by many the greatest wrestling game ever made.",
+      "releaseYear": 2000,
+      "genre": "fighting",
+      "players": 4,
+      "region": "US",
+      "developer": "AKI Corporation",
+      "publisher": "THQ",
+      "tags": ["wrestling", "wwf", "fighting", "multiplayer"],
+      "addedAt": "2026-05-10T00:00:00Z"
     }
   ],
   "metadata": {
-    "totalGames": 3,
+    "totalGames": 4,
     "byConsole": {
-      "ps1": 3
+      "ps1": 3,
+      "n64": 1
     },
     "description": "Curated collection of classic retro games"
   }

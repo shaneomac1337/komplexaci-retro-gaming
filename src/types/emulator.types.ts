@@ -9,7 +9,7 @@ import type { ConsoleType } from './console.types';
  * EmulatorJS core type mapping
  * Maps our console types to EmulatorJS core identifiers
  */
-export type EmulatorCore = 'psx' | 'mednafen_psx_hw' | 'pcsx_rearmed' | 'nes' | 'snes' | 'n64' | 'gb' | 'gba';
+export type EmulatorCore = 'psx' | 'mednafen_psx_hw' | 'pcsx_rearmed' | 'nes' | 'snes' | 'n64' | 'mupen64plus_next' | 'parallel_n64' | 'gb' | 'gba';
 
 /**
  * EmulatorJS language codes

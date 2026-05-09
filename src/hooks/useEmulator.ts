@@ -10,10 +10,13 @@ import { CONSOLE_CONFIG } from '@/types';
 import type { Game, ConsoleType, EmulatorCore } from '@/types';
 
 /**
- * CDN base URL for EmulatorJS assets
- * Using 'latest' for best VSync and performance features
+ * CDN base URL for EmulatorJS assets.
+ * Using 'nightly' because the 'latest'/'stable' mednafen_psx_hw build (2025-06-14)
+ * aborts in WASM with no diagnostics; nightly carries a 2026-02-04 build that
+ * actually loads PSX content. Trade-off: nightly may include unstable frontend
+ * changes — pin to a tagged release if regressions show up.
  */
-const CDN_BASE_URL = 'https://cdn.emulatorjs.org/latest/data/';
+const CDN_BASE_URL = 'https://cdn.emulatorjs.org/nightly/data/';
 
 /**
  * Global flag to track if EmulatorJS script has been loaded
@@ -28,12 +31,10 @@ let emulatorJsLoadPromise: Promise<void> | null = null;
  * Mapping from our console types to EmulatorJS core names
  */
 const CORE_MAPPING: Record<ConsoleType, EmulatorCore> = {
-  // Note: mednafen_psx_hw has WebAssembly issues in EmulatorJS (function signature mismatch)
-  // Using pcsx_rearmed which also supports BIOS and is more stable in browsers
   ps1: 'pcsx_rearmed',
   nes: 'nes',
   snes: 'snes',
-  n64: 'n64',
+  n64: 'parallel_n64',
   gb: 'gb',
   gba: 'gba',
 };
@@ -123,8 +124,9 @@ interface UseEmulatorReturn {
   toggleMute: () => void;
   /** Set volume (0-1) */
   setVolume: (volume: number) => void;
-  /** Toggle fullscreen mode */
-  toggleFullscreen: () => void;
+  /** Toggle fullscreen mode. Pass `lowLatency: true` to fullscreen the bare canvas
+   *  for best VRR/hardware-overlay behavior (hides EmulatorJS UI controls). */
+  toggleFullscreen: (opts?: { lowLatency?: boolean }) => void;
   /** Toggle settings menu */
   toggleMenu: () => void;
   /** Save current state */
@@ -404,15 +406,22 @@ export function useEmulator(
         window.EJS_startOnLoaded = true; // Auto-start game without "Start Game" button
         window.EJS_CacheLimit = 1073741824; // 1GB cache limit
 
-        // Performance settings for smooth frame pacing on high refresh rate monitors
+        // VRR-friendly settings: let the emulator push frames at native console rate
+        // and let the display adapt (Windows DRR / FreeSync / G-Sync). hard_sync and
+        // triple buffering fight VRR and add latency, so we use double buffering and
+        // skip GPU lockstep.
+        //
+        // pcsx_rearmed_show_bios_bootlogo: shows the iconic Sony Computer Entertainment
+        // / PlayStation splash before each PS1 game loads (off by default for speed).
+        // Harmless on non-PS1 cores — they ignore unknown keys.
         // @ts-expect-error - EmulatorJS config option
         window.EJS_defaultOptions = {
-          'shader': 'crt-mattias.glslp',   // CRT shader for authentic retro look
-          // RetroArch core options for frame pacing
-          'video_vsync': 'enabled',        // VSync
-          'video_frame_delay': '0',        // Minimize input latency
-          'video_hard_sync': 'enabled',    // Hard GPU sync for better frame pacing
-          'video_max_swapchain_images': '3', // Triple buffering
+          'shader': 'crt-lottes',
+          'video_vsync': 'enabled',
+          'video_frame_delay': '0',
+          'video_hard_sync': 'disabled',
+          'video_max_swapchain_images': '2',
+          'pcsx_rearmed_show_bios_bootlogo': 'enabled',
         };
 
         // Disable mouse/pointer lock - most retro games don't need it
@@ -495,14 +504,18 @@ export function useEmulator(
           3: {}, // Player 4 - use defaults
         };
 
-        // Set BIOS URL if required
-        if (consoleConfig.requiresBios && consoleConfig.biosFiles?.length) {
-          const primaryBios = consoleConfig.biosFiles.find((b) => b.required) || consoleConfig.biosFiles[0];
-          if (primaryBios && consoleConfig.biosPath) {
-            const biosUrl = `${consoleConfig.biosPath}/${primaryBios.name}`;
-            console.log('[EJS] Setting BIOS URL:', biosUrl);
-            window.EJS_biosUrl = biosUrl;
-          }
+        // Set BIOS URL if required.
+        // When a console has multiple BIOSes (e.g. PS1 needs all 3 region BIOSes for
+        // mednafen_psx_hw to pick the right one per disc), point EJS_biosUrl at a
+        // <console>-bios.zip on the same biosPath. EmulatorJS extracts every entry
+        // into the emulated FS. Single-BIOS consoles still use a direct file URL.
+        if (consoleConfig.requiresBios && consoleConfig.biosFiles?.length && consoleConfig.biosPath) {
+          const hasMultipleBios = consoleConfig.biosFiles.length > 1;
+          const biosUrl = hasMultipleBios
+            ? `${consoleConfig.biosPath}/${game.console}-bios.zip`
+            : `${consoleConfig.biosPath}/${consoleConfig.biosFiles[0].name}`;
+          console.log('[EJS] Setting BIOS URL:', biosUrl, hasMultipleBios ? '(zip bundle)' : '(single file)');
+          window.EJS_biosUrl = biosUrl;
         } else {
           console.log('[EJS] No BIOS required for this console');
         }
@@ -651,26 +664,32 @@ export function useEmulator(
   }, []);
 
   /**
-   * Toggle fullscreen mode on the emulator container
+   * Toggle fullscreen mode on the emulator.
+   *
+   * Default mode fullscreens the EmulatorJS wrapper (UI overlays remain visible).
+   * Low-latency mode fullscreens the bare <canvas> — UI controls are hidden but the
+   * canvas can be promoted to a hardware overlay, which is required for VRR
+   * (FreeSync/G-Sync/Windows DRR) and the `desynchronized` low-latency path to work.
    */
-  const toggleFullscreen = useCallback(() => {
+  const toggleFullscreen = useCallback((opts?: { lowLatency?: boolean }) => {
     if (typeof window === 'undefined') return;
 
     try {
-      // Find the emulator game container
-      const player = document.getElementById('emulator-player');
-      const gameContainer = player?.querySelector('#game') as HTMLElement
-        || player?.querySelector('canvas')?.parentElement as HTMLElement
-        || player;
-
-      if (!gameContainer) return;
-
-      // Toggle fullscreen using browser API
       if (document.fullscreenElement) {
         document.exitFullscreen().catch(() => {});
-      } else {
-        gameContainer.requestFullscreen().catch(() => {});
+        return;
       }
+
+      const player = document.getElementById('emulator-player');
+      if (!player) return;
+
+      const target = opts?.lowLatency
+        ? player.querySelector('canvas') as HTMLElement | null
+        : (player.querySelector('#game') as HTMLElement | null)
+            || (player.querySelector('canvas')?.parentElement as HTMLElement | null)
+            || player;
+
+      target?.requestFullscreen().catch(() => {});
     } catch {
       // Silently ignore fullscreen errors
     }
