@@ -2,7 +2,7 @@
 # Used to upload games.json to CDN
 
 name = "komplexaci-retro-gaming"
-compatibility_date = "2024-01-01"
+compatibility_date = "2026-04-01"
 
 # R2 bucket binding
 [[r2_buckets]]
