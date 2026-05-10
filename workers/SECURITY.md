@@ -89,3 +89,44 @@ Stronger options if these Workers stay long term:
 - mTLS with a private CA
 
 Treat the current secret-based auth as the **minimum** baseline.
+
+## Dependency advisories — triage
+
+`npm audit` will surface advisories. Production runtime (the bundle
+shipped to browsers) was hit by **one** real one — already patched:
+
+- `@remix-run/router` < 1.23.2 — *React Router XSS via Open Redirects*
+  (GHSA-2w69-qvjg-hvjx, CVSS 8.0). Fixed by bumping `react-router-dom`
+  to 6.30.3 (`@remix-run/router` 1.23.2). Already applied to
+  `package-lock.json`.
+
+The remaining advisories are **dev / build tooling only** and do not
+ship to end users:
+
+| Package | Severity | Why it doesn't reach production |
+|---|---|---|
+| `vite` | HIGH (path traversal, fs.deny bypass, WS file read) | Affects only the dev server (`npm run dev`). Never expose `localhost:5173` on a public network. |
+| `undici` (via `wrangler` / `miniflare`) | HIGH (smuggling, CRLF, etc.) | Wrangler is a CLI you run locally; not on the request path of any production Worker. |
+| `esbuild` (via `wrangler`) | MODERATE (dev server CORS) | Bundled with wrangler dev, same scope. |
+| `picomatch` | HIGH (glob mismatch, ReDoS) | Build-time glob matching only. |
+| `postcss` | MODERATE (CSS Stringify XSS) | Only triggers on attacker-controlled CSS strings at build time — none here. |
+| `brace-expansion` | MODERATE (ReDoS) | DOS class, build-time. |
+| `uuid@13` | MODERATE (v3/v5/v6 buffer bounds) | Package is in `package.json` but never imported in `src/`; even if it were, only v3/v5/v6 generation is affected. |
+
+Cleanups (optional, all require breaking-change `--force` upgrades):
+
+```sh
+# Force upgrade to vite 8 / wrangler 4.85 / uuid 14 — review changelogs first:
+npm audit fix --force
+```
+
+If you don't actively use a deployed `r2-uploader` Worker, deleting it
+also removes the wrangler/miniflare dev-tooling exposure (you'd no longer
+need `wrangler` installed at all):
+
+```sh
+npx wrangler delete --name r2-uploader
+npx wrangler delete --name komplexaci-upload-proxy
+npm uninstall wrangler
+```
+
