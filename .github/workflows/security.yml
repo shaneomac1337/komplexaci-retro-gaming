@@ -17,6 +17,14 @@ jobs:
     name: npm audit (production runtime)
     runs-on: ubuntu-latest
     steps:
+      # Audit-mode network egress monitor. Logs every outbound connection
+      # the runner makes (npm install, action downloads, telemetry) so a
+      # malicious dep / action exfiltrating data via a curl-back is visible
+      # in the workflow's "Harden Runner" tab. Switch egress-policy to
+      # `block` once the legit allow-list is captured.
+      - uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450  # v2.19.1
+        with:
+          egress-policy: audit
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4.4.0
         with:
@@ -37,6 +45,14 @@ jobs:
     name: tsc (frontend + workers)
     runs-on: ubuntu-latest
     steps:
+      # Audit-mode network egress monitor. Logs every outbound connection
+      # the runner makes (npm install, action downloads, telemetry) so a
+      # malicious dep / action exfiltrating data via a curl-back is visible
+      # in the workflow's "Harden Runner" tab. Switch egress-policy to
+      # `block` once the legit allow-list is captured.
+      - uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450  # v2.19.1
+        with:
+          egress-policy: audit
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4.4.0
         with:
@@ -60,6 +76,14 @@ jobs:
     name: eslint
     runs-on: ubuntu-latest
     steps:
+      # Audit-mode network egress monitor. Logs every outbound connection
+      # the runner makes (npm install, action downloads, telemetry) so a
+      # malicious dep / action exfiltrating data via a curl-back is visible
+      # in the workflow's "Harden Runner" tab. Switch egress-policy to
+      # `block` once the legit allow-list is captured.
+      - uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450  # v2.19.1
+        with:
+          egress-policy: audit
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4.4.0
         with:
