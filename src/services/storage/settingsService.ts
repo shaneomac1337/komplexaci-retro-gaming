@@ -8,6 +8,46 @@
 import { db } from '../database/db';
 import { DEFAULT_USER_SETTINGS } from '../database/models';
 import type { UserSettings } from '../database/models';
+import type { PlayerControlMappings, ControlMapping } from '../../types/emulator.types';
+
+/**
+ * Shape-validate an imported PlayerControlMappings object.
+ *
+ * The settings-import flow accepts a JSON file from the user. Without
+ * structural validation a malformed `controlMappings` (for example one
+ * with `__proto__` keys, deeply nested junk, or non-object entries)
+ * would be persisted to IndexedDB as-is and could surprise any code
+ * that later consumes it. Defense in depth — even though
+ * `controlMappings` is currently dormant data (the emulator's
+ * EJS_defaultControls is hardcoded), tightening the validator now
+ * means future wiring stays safe.
+ */
+function isValidControlMapping(value: unknown): value is ControlMapping {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) return false;
+  // Use Object.getOwnPropertyNames so __proto__ as an own property (which
+  // JSON.parse creates) is visible — Object.entries / Object.keys may skip it.
+  const keys = Object.getOwnPropertyNames(value);
+  if (keys.length > 256) return false;
+  const v = value as Record<string, unknown>;
+  for (const key of keys) {
+    // Reject prototype-pollution keys outright.
+    if (key === '__proto__' || key === 'constructor' || key === 'prototype') return false;
+    const mapping = v[key];
+    if (typeof mapping !== 'object' || mapping === null) return false;
+  }
+  return true;
+}
+
+function isValidPlayerControlMappings(value: unknown): value is PlayerControlMappings {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) return false;
+  const v = value as Record<string, unknown>;
+  // player1 is required; others are optional. Each, if present, must be a valid mapping.
+  if (!isValidControlMapping(v.player1)) return false;
+  for (const slot of ['player2', 'player3', 'player4'] as const) {
+    if (v[slot] !== undefined && !isValidControlMapping(v[slot])) return false;
+  }
+  return true;
+}
 
 /**
  * User settings management service
@@ -234,9 +274,11 @@ export const settingsService = {
         updates.showVirtualGamepad = parsed.showVirtualGamepad;
       }
 
-      if (typeof parsed.controlMappings === 'object' && parsed.controlMappings !== null) {
+      if (isValidPlayerControlMappings(parsed.controlMappings)) {
         updates.controlMappings = parsed.controlMappings;
       }
+      // Silently drop controlMappings if the structure is invalid; rest of
+      // the import (volume, slot, gamepad toggle) still applies.
 
       await db.updateSettings(updates);
     } catch (error) {
