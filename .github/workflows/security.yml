@@ -60,4 +60,7 @@ jobs:
           node-version: '20'
           cache: npm
       - run: npm ci
-      - run: npx eslint . --ext .ts,.tsx,.js,.jsx
+      # ESLint 9 flat config (eslint.config.js) handles file matching itself —
+      # --ext is ignored / errors in flat-config mode, so just match the
+      # `npm run lint` script.
+      - run: npm run lint
