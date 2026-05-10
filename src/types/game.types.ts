@@ -206,7 +206,12 @@ export interface GameSearchResult {
 export function isValidGame(obj: unknown): obj is Game {
   if (typeof obj !== 'object' || obj === null) return false;
   const game = obj as Record<string, unknown>;
-  if (typeof game.id !== 'string' || game.id.length === 0) return false;
+  // id is used in route paths (`/play/:id`) and as a React key. Constrain
+  // to lowercase alphanumerics + hyphens + underscores so a tampered manifest
+  // can't use slashes / spaces / control chars to break routing or React's
+  // reconciliation. Existing IDs (`ps1-crash-bash`, `n64-wwf-no-mercy`)
+  // already follow this convention.
+  if (typeof game.id !== 'string' || !/^[a-z0-9_-]+$/.test(game.id) || game.id.length > 128) return false;
   if (typeof game.title !== 'string' || game.title.length === 0) return false;
   if (typeof game.console !== 'string' || !isConsoleType(game.console)) return false;
   if (typeof game.romPath !== 'string' || !isSafeAssetUrl(game.romPath)) return false;

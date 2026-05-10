@@ -76,6 +76,13 @@ describe('isValidGame', () => {
       expect(isValidGame(true)).toBe(false);
     });
     it('rejects empty id', () => expect(isValidGame({ ...validGame, id: '' })).toBe(false));
+    it('rejects id with slashes', () => expect(isValidGame({ ...validGame, id: 'ps1/crash-bash' })).toBe(false));
+    it('rejects id with spaces', () => expect(isValidGame({ ...validGame, id: 'ps1 crash bash' })).toBe(false));
+    it('rejects id with HTML-ish chars', () => expect(isValidGame({ ...validGame, id: '<script>alert' })).toBe(false));
+    it('rejects id with uppercase', () => expect(isValidGame({ ...validGame, id: 'PS1-Crash-Bash' })).toBe(false));
+    it('rejects id with dots', () => expect(isValidGame({ ...validGame, id: '../etc/passwd' })).toBe(false));
+    it('rejects id over 128 chars', () => expect(isValidGame({ ...validGame, id: 'a'.repeat(200) })).toBe(false));
+    it('accepts id with underscores', () => expect(isValidGame({ ...validGame, id: 'ps1_crash_bash' })).toBe(true));
     it('rejects empty title', () => expect(isValidGame({ ...validGame, title: '' })).toBe(false));
     it('rejects missing romPath', () => {
       const noRom: Record<string, unknown> = { ...validGame };
