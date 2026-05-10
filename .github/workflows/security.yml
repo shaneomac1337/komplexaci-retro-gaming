@@ -26,6 +26,12 @@ jobs:
       # Production runtime only. Dev tooling advisories (vite, wrangler, etc.)
       # do not ship to end users — see workers/SECURITY.md.
       - run: npm audit --omit=dev --audit-level=moderate
+      # Supply-chain integrity: verify every installed package has a valid
+      # signature from the npm registry. Catches packages published without
+      # a registry signature (one of the few signals available against
+      # an account-takeover supply-chain attack).
+      - name: Verify package signatures
+        run: npm audit signatures
 
   typecheck:
     name: tsc (frontend + workers)
