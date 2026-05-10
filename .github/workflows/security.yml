@@ -97,3 +97,22 @@ jobs:
       # --ext is ignored / errors in flat-config mode, so just match the
       # `npm run lint` script.
       - run: npm run lint
+
+  test:
+    name: vitest (shared worker validators)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450  # v2.19.1
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4.4.0
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      # Regression suite for the shared Worker security validators
+      # (workers/shared/validators.ts). Catches accidental loosening of
+      # the key allow-list or breakage of the constant-time secret
+      # comparison. See workers/shared/validators.test.ts.
+      - run: npm test
