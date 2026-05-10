@@ -59,7 +59,7 @@ export default defineConfig({
           // Database layer - rarely changes
           'vendor-db': ['dexie', 'dexie-react-hooks'],
           // Utility libraries - rarely changes
-          'vendor-utils': ['clsx', 'uuid'],
+          'vendor-utils': ['clsx'],
         },
         // Asset file naming for better caching
         assetFileNames: (assetInfo) => {
