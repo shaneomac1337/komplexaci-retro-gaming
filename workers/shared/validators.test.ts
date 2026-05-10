@@ -7,6 +7,12 @@
 
 import { describe, it, expect } from "vitest";
 import { isValidKey, safeCompareSecrets, KEY_ALLOWLIST, SIMPLE_PUT_MAX_BYTES } from "./validators";
+// The JS Worker (scripts/r2-fetch-worker.js) carries a duplicated copy of
+// KEY_ALLOWLIST because it can't import a .ts module without a build step.
+// This import lets the drift-detection test below catch any future change
+// that loosens the allow-list in one file but not the other.
+// @ts-expect-error -- plain .js Worker file with no .d.ts; the export is real
+import { KEY_ALLOWLIST as JS_KEY_ALLOWLIST } from "../../scripts/r2-fetch-worker.js";
 
 describe("isValidKey", () => {
   describe("accepts well-formed allow-listed keys", () => {
@@ -83,6 +89,16 @@ describe("isValidKey", () => {
   it("SIMPLE_PUT_MAX_BYTES is exported and is a positive number", () => {
     expect(typeof SIMPLE_PUT_MAX_BYTES).toBe("number");
     expect(SIMPLE_PUT_MAX_BYTES).toBeGreaterThan(0);
+  });
+});
+
+describe("KEY_ALLOWLIST drift detection (JS vs TS)", () => {
+  // The JS Worker (scripts/r2-fetch-worker.js) maintains its own copy of
+  // KEY_ALLOWLIST. The two MUST stay byte-identical — this test fails if
+  // someone tightens one without mirroring to the other.
+  it("JS Worker regex source is identical to TS canonical version", () => {
+    expect(JS_KEY_ALLOWLIST.source).toBe(KEY_ALLOWLIST.source);
+    expect(JS_KEY_ALLOWLIST.flags).toBe(KEY_ALLOWLIST.flags);
   });
 });
 
