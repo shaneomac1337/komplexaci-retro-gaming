@@ -130,6 +130,23 @@ npx wrangler delete --name komplexaci-upload-proxy
 npm uninstall wrangler
 ```
 
+## Ongoing automated defense
+
+Five GitHub Actions workflows in `.github/workflows/` keep the repo's
+security posture from drifting:
+
+| Workflow | Triggers | Catches |
+|---|---|---|
+| `security.yml` | every push/PR + Mon 06:00 UTC | new dep CVEs, unsigned packages, type errors, lint warnings |
+| `codeql.yml` | every push/PR + Mon 07:00 UTC | DOM XSS, open redirects, path injection, insecure crypto |
+| `gitleaks.yml` | every push/PR | accidentally committed secrets (only scans the diff so historical strings don't keep firing) |
+| `scorecard.yml` | push to master + Tue 06:00 UTC | OpenSSF security best-practice scoring (branch protection, pinned actions, etc.) |
+| `dependabot.yml` (bot config) | weekly Mon 06:00 Europe/Prague | auto-PRs new versions of npm + GitHub Actions; security workflow then verifies the bumped lockfile |
+
+All actions in those workflows are pinned to immutable commit SHAs (with
+the version comment kept fresh by Dependabot) so a malicious retag of an
+upstream action can't silently land in CI.
+
 ## Browser response headers
 
 `vercel.json` sets the following defense-in-depth headers on every

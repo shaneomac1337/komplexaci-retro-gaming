@@ -1,0 +1,53 @@
+# Enforce LF line endings for all text. Avoids the CRLF/LF flip-flop
+# that happens on Windows checkouts (which would otherwise let a future
+# diff sneak in line-ending changes that hide a real edit).
+* text=auto eol=lf
+
+# Source / config — explicit text
+*.ts          text eol=lf
+*.tsx         text eol=lf
+*.js          text eol=lf
+*.jsx         text eol=lf
+*.mjs         text eol=lf
+*.cjs         text eol=lf
+*.json        text eol=lf
+*.jsonc       text eol=lf
+*.md          text eol=lf
+*.yml         text eol=lf
+*.yaml        text eol=lf
+*.toml        text eol=lf
+*.html        text eol=lf
+*.css         text eol=lf
+*.svg         text eol=lf
+*.sh          text eol=lf
+
+# Windows-only scripts must keep CRLF
+*.bat         text eol=crlf
+*.cmd         text eol=crlf
+*.ps1         text eol=crlf
+
+# Binary assets — never line-end-normalize, never diff
+*.png         binary
+*.jpg         binary
+*.jpeg        binary
+*.webp        binary
+*.gif         binary
+*.ico         binary
+*.woff        binary
+*.woff2       binary
+*.ttf         binary
+*.otf         binary
+*.zip         binary
+*.bin         binary
+*.chd         binary
+*.cue         text eol=lf
+*.z64         binary
+*.n64         binary
+*.v64         binary
+*.sfc         binary
+*.smc         binary
+*.nes         binary
+*.gb          binary
+*.gbc         binary
+*.gba         binary
+*.pdf         binary
