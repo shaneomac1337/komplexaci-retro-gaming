@@ -157,7 +157,10 @@ export const HeroSection = memo(function HeroSection({ className }: HeroSectionP
         {activeGame?.coverPath && (
           <div
             className={clsx(styles.backdrop, { [styles.transitioning]: isTransitioning })}
-            style={{ backgroundImage: `url(${activeGame.coverPath})` }}
+            // JSON.stringify quote-escapes the URL inside CSS url(), preventing
+            // CSS injection if game.coverPath ever carries hostile bytes (e.g.
+            // a tampered games.json containing `") ; background: url(http://attacker)`).
+            style={{ backgroundImage: `url(${JSON.stringify(activeGame.coverPath)})` }}
           />
         )}
         <div className={styles.backdropOverlay} />

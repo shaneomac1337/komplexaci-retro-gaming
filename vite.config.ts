@@ -42,7 +42,10 @@ export default defineConfig({
 
   build: {
     target: 'esnext',
-    sourcemap: true,
+    // 'hidden' generates sourcemaps for error monitoring tools but does NOT
+    // emit a //# sourceMappingURL comment, so they aren't auto-served to the
+    // public. Avoids leaking original source structure / paths in production.
+    sourcemap: 'hidden',
     // Chunk size warning threshold (in KB)
     chunkSizeWarningLimit: 500,
     rollupOptions: {

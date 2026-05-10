@@ -45,13 +45,20 @@ function isValidSourceUrl(raw) {
   return parsed;
 }
 
-function constantTimeEqual(a, b) {
+// Hash both sides with SHA-256 before comparison so the comparison is
+// length-independent (raw bytewise compare leaks the secret's length via
+// the early-return on length mismatch).
+async function safeCompareSecrets(a, b) {
   if (!a || !b) return false;
-  if (a.length !== b.length) return false;
+  const enc = new TextEncoder();
+  const [aHash, bHash] = await Promise.all([
+    crypto.subtle.digest('SHA-256', enc.encode(a)),
+    crypto.subtle.digest('SHA-256', enc.encode(b)),
+  ]);
+  const av = new Uint8Array(aHash);
+  const bv = new Uint8Array(bHash);
   let diff = 0;
-  for (let i = 0; i < a.length; i++) {
-    diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  }
+  for (let i = 0; i < av.length; i++) diff |= av[i] ^ bv[i];
   return diff === 0;
 }
 
@@ -67,7 +74,7 @@ export default {
     }
     const header = request.headers.get('Authorization') || '';
     const presented = header.startsWith('Bearer ') ? header.slice(7) : '';
-    if (!constantTimeEqual(presented, expected)) {
+    if (!(await safeCompareSecrets(presented, expected))) {
       return new Response('Unauthorized', { status: 401 });
     }
 

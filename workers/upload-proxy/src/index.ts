@@ -24,13 +24,20 @@ function isValidKey(key: string): boolean {
   return KEY_ALLOWLIST.test(key);
 }
 
-function constantTimeEqual(a: string, b: string): boolean {
+// Hash both sides with SHA-256 before comparison so the comparison is
+// length-independent (raw bytewise compare leaks the secret's length via
+// the early-return on length mismatch).
+async function safeCompareSecrets(a: string, b: string): Promise<boolean> {
   if (!a || !b) return false;
-  if (a.length !== b.length) return false;
+  const enc = new TextEncoder();
+  const [aHash, bHash] = await Promise.all([
+    crypto.subtle.digest("SHA-256", enc.encode(a)),
+    crypto.subtle.digest("SHA-256", enc.encode(b)),
+  ]);
+  const av = new Uint8Array(aHash);
+  const bv = new Uint8Array(bHash);
   let diff = 0;
-  for (let i = 0; i < a.length; i++) {
-    diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  }
+  for (let i = 0; i < av.length; i++) diff |= av[i] ^ bv[i];
   return diff === 0;
 }
 
@@ -50,7 +57,7 @@ export default {
       return new Response("Server misconfigured: UPLOAD_SECRET not set", { status: 500 });
     }
     const presented = request.headers.get("X-Upload-Secret") || "";
-    if (!constantTimeEqual(presented, expected)) {
+    if (!(await safeCompareSecrets(presented, expected))) {
       return new Response("Unauthorized", { status: 401 });
     }
 
