@@ -143,9 +143,16 @@ export default {
       const key = path.slice(1);
       if (!isValidKey(key)) return new Response("Invalid key", { status: 400 });
 
+      // Require a parseable Content-Length so the size cap can't be bypassed
+      // by omitting the header or sending Transfer-Encoding: chunked. Clients
+      // that genuinely don't know the size up front should use the multipart
+      // upload endpoints, which R2 caps per-part at its own ceiling.
       const lenHeader = request.headers.get("Content-Length");
       const len = lenHeader ? parseInt(lenHeader, 10) : NaN;
-      if (Number.isFinite(len) && len > SIMPLE_PUT_MAX_BYTES) {
+      if (!Number.isFinite(len) || len < 0) {
+        return new Response("Content-Length required for simple PUT", { status: 411 });
+      }
+      if (len > SIMPLE_PUT_MAX_BYTES) {
         return new Response("Payload too large; use multipart", { status: 413 });
       }
 

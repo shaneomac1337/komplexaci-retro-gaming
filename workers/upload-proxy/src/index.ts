@@ -72,9 +72,14 @@ export default {
           return new Response("Missing body", { status: 400 });
         }
 
+        // Require a parseable Content-Length so the size cap can't be bypassed
+        // by omitting the header or sending Transfer-Encoding: chunked.
         const lenHeader = request.headers.get("Content-Length");
         const len = lenHeader ? parseInt(lenHeader, 10) : NaN;
-        if (Number.isFinite(len) && len > SIMPLE_PUT_MAX_BYTES) {
+        if (!Number.isFinite(len) || len < 0) {
+          return new Response("Content-Length required", { status: 411 });
+        }
+        if (len > SIMPLE_PUT_MAX_BYTES) {
           return new Response("Payload too large", { status: 413 });
         }
 
