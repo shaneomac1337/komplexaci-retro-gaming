@@ -20,6 +20,24 @@ Thumbs.db
 .env.local
 .env.*.local
 
+# Secrets / credentials — never commit these
+.dev.vars
+.dev.vars.*
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+secrets.json
+credentials.json
+service-account*.json
+.npmrc.local
+
 # Logs
 logs/
 *.log

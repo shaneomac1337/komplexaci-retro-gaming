@@ -1,0 +1,31 @@
+name: gitleaks
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+  # PRs may want to comment scan results — least-privilege.
+  pull-requests: read
+
+jobs:
+  scan:
+    name: secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Need full history so gitleaks can scan commit ranges and
+          # produce useful findings on PRs.
+          fetch-depth: 0
+
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          # By default the action scans only the diff for the current
+          # event (push or PR), so historical false-positives like the
+          # already-rotated `komplexaci-upload-2024` won't keep firing.
+          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: "true"
+          GITLEAKS_ENABLE_SUMMARY: "true"
