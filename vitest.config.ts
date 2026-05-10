@@ -6,7 +6,7 @@ export default defineConfig({
     // src/main.test.tsx are dummy debug components (not vitest suites)
     // — explicitly include the .test.ts pattern (excluding .tsx) so they
     // don't choke the run.
-    include: ['workers/**/*.test.{ts,mts}', 'src/**/*.test.ts'],
+    include: ['workers/**/*.test.{ts,mts}', 'src/**/*.test.ts', 'scripts/**/*.test.mjs'],
     // Workers tests use crypto.subtle / TextEncoder which are globals
     // in modern Node — no jsdom needed.
     environment: 'node',
