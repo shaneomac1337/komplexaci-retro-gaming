@@ -1,0 +1,63 @@
+name: security
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  schedule:
+    # Weekly Monday 06:00 UTC — catches new advisories against pinned deps.
+    - cron: '0 6 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: npm audit (production runtime)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      # Production runtime only. Dev tooling advisories (vite, wrangler, etc.)
+      # do not ship to end users — see workers/SECURITY.md.
+      - run: npm audit --omit=dev --audit-level=moderate
+
+  typecheck:
+    name: tsc (frontend + workers)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - name: Frontend typecheck
+        run: npx tsc --noEmit -p tsconfig.app.json
+      - name: Worker typecheck
+        run: |
+          npx tsc --noEmit \
+            --types @cloudflare/workers-types \
+            --target es2022 --module esnext --moduleResolution bundler \
+            --strict --skipLibCheck \
+            workers/r2-uploader/src/index.ts \
+            workers/upload-proxy/src/index.ts
+      - name: Worker JS syntax check
+        run: node --check scripts/r2-fetch-worker.js
+
+  lint:
+    name: eslint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - run: npx eslint . --ext .ts,.tsx,.js,.jsx
