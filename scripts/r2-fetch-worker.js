@@ -22,6 +22,10 @@ const ALLOWED_URL_HOSTS = new Set([
   'archive.org',
 ]);
 
+// IMPORTANT: This regex MUST stay in sync with `workers/shared/validators.ts`.
+// (The two .ts Workers import the canonical version from there. This .js file
+// can't import the .ts module without a build step, so the duplication is
+// intentional — but if you tighten the allow-list there, mirror it here.)
 const KEY_ALLOWLIST =
   /^(roms|bios|covers|saves)\/[A-Za-z0-9._/-]+\.(chd|cue|bin|zip|z64|n64|v64|sfc|smc|nes|gb|gbc|gba|jpg|jpeg|png|webp|json)$/;
 

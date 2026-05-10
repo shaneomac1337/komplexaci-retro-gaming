@@ -8,42 +8,11 @@
 // All keys are validated against an allow-list regex; reads are intentionally
 // not exposed because the public CDN already serves R2 content.
 
+import { isValidKey, safeCompareSecrets, SIMPLE_PUT_MAX_BYTES } from "../../shared/validators";
+
 interface Env {
   CDN_BUCKET: R2Bucket;
   UPLOAD_SECRET: string;
-}
-
-// Allow-listed object key prefixes / extensions. R2 keys are flat strings, so
-// path traversal here means overwriting other prefixes — anchor the regex.
-const KEY_ALLOWLIST =
-  /^(roms|bios|covers|saves)\/[A-Za-z0-9._/-]+\.(chd|cue|bin|zip|z64|n64|v64|sfc|smc|nes|gb|gbc|gba|jpg|jpeg|png|webp|json)$/;
-
-// Hard cap on a single PUT body (multipart parts are independently capped at
-// 5 GiB by R2 itself, this is just for the simple-PUT path).
-const SIMPLE_PUT_MAX_BYTES = 4 * 1024 * 1024 * 1024; // 4 GiB
-
-function isValidKey(key: string): boolean {
-  if (!key || key.length > 512) return false;
-  if (key.includes("..") || key.includes("\0") || key.startsWith("/")) return false;
-  if (key.includes("%2e%2e") || key.includes("%2E%2E")) return false;
-  return KEY_ALLOWLIST.test(key);
-}
-
-// Hash both sides with SHA-256 before comparison so the comparison is
-// length-independent (raw bytewise compare leaks the secret's length via
-// the early-return on length mismatch).
-async function safeCompareSecrets(a: string, b: string): Promise<boolean> {
-  if (!a || !b) return false;
-  const enc = new TextEncoder();
-  const [aHash, bHash] = await Promise.all([
-    crypto.subtle.digest("SHA-256", enc.encode(a)),
-    crypto.subtle.digest("SHA-256", enc.encode(b)),
-  ]);
-  const av = new Uint8Array(aHash);
-  const bv = new Uint8Array(bHash);
-  let diff = 0;
-  for (let i = 0; i < av.length; i++) diff |= av[i] ^ bv[i];
-  return diff === 0;
 }
 
 async function authorize(request: Request, env: Env): Promise<Response | null> {
