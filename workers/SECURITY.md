@@ -147,6 +147,46 @@ All actions in those workflows are pinned to immutable commit SHAs (with
 the version comment kept fresh by Dependabot) so a malicious retag of an
 upstream action can't silently land in CI.
 
+## harden-runner: audit → block transition
+
+`step-security/harden-runner` currently runs in `egress-policy: audit`
+on all four workflows. That mode logs every outbound network connection
+the runner makes (npm registry, action downloads, sigstore, GitHub API,
+etc.) without blocking anything. Switching it to `block` would refuse
+any destination not on a static allow-list — strong supply-chain
+defense, but breaks the workflow if the allow-list is incomplete.
+
+The intended transition:
+
+1. Let the workflows run on master + cron for ~2 weeks. Each run records
+   its actual egress destinations to the StepSecurity dashboard at
+   `https://app.stepsecurity.io/github/<org>/<repo>/actions/runs/<run-id>`
+   (linked from the **Harden Runner** tab on each workflow run).
+
+2. Open the dashboard and copy the captured destinations into a
+   per-workflow `allowed-endpoints` value, e.g.:
+
+   ```yaml
+   - uses: step-security/harden-runner@a5ad31d6...  # v2.19.1
+     with:
+       egress-policy: block
+       allowed-endpoints: >
+         api.github.com:443
+         registry.npmjs.org:443
+         github.com:443
+         objects.githubusercontent.com:443
+         # ...
+   ```
+
+3. Push and watch the run. If a legit step now fails because its host
+   isn't on the list, add it. Once the run is green, `block` is in
+   effect and a future malicious dep trying to phone home to a
+   non-listed destination is silently denied.
+
+Doing this only matters once the workflows have meaningful trust
+(e.g. running on PRs from outside contributors) — for the current
+single-maintainer setup, the audit-mode visibility alone is enough.
+
 ## Browser response headers
 
 `vercel.json` sets the following defense-in-depth headers on every
