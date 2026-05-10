@@ -1,32 +1,74 @@
 // Upload Proxy Worker for R2
 // Accepts PUT requests and stores files in R2 bucket
+//
+// SECURITY: Auth is via the UPLOAD_SECRET Wrangler secret (NOT a hardcoded
+// constant — that prior version was committed to source). Set with:
+//   cd workers/upload-proxy && npx wrangler secret put UPLOAD_SECRET
+// Use a 32+ byte random value (e.g. `openssl rand -hex 32`).
+// Header: X-Upload-Secret: <value>
 
 interface Env {
   BUCKET: R2Bucket;
+  UPLOAD_SECRET: string;
 }
 
-const UPLOAD_SECRET = "komplexaci-upload-2024"; // Simple auth
+const KEY_ALLOWLIST =
+  /^(roms|bios|covers|saves)\/[A-Za-z0-9._/-]+\.(chd|cue|bin|zip|z64|n64|v64|sfc|smc|nes|gb|gbc|gba|jpg|jpeg|png|webp|json)$/;
+
+const SIMPLE_PUT_MAX_BYTES = 4 * 1024 * 1024 * 1024; // 4 GiB
+
+function isValidKey(key: string): boolean {
+  if (!key || key.length > 512) return false;
+  if (key.includes("..") || key.includes("\0") || key.startsWith("/")) return false;
+  if (key.includes("%2e%2e") || key.includes("%2E%2E")) return false;
+  return KEY_ALLOWLIST.test(key);
+}
+
+function constantTimeEqual(a: string, b: string): boolean {
+  if (!a || !b) return false;
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) {
+    diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return diff === 0;
+}
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     const key = url.pathname.slice(1); // Remove leading slash
 
-    // Check auth header
-    const auth = request.headers.get("X-Upload-Secret");
-    if (auth !== UPLOAD_SECRET) {
+    // Health endpoint — no auth, no body, no key disclosure.
+    if (request.method === "GET" && key === "health") {
+      return new Response("OK", { status: 200 });
+    }
+
+    // Auth check — fail closed if secret isn't configured.
+    const expected = env.UPLOAD_SECRET;
+    if (!expected || expected.length < 16) {
+      return new Response("Server misconfigured: UPLOAD_SECRET not set", { status: 500 });
+    }
+    const presented = request.headers.get("X-Upload-Secret") || "";
+    if (!constantTimeEqual(presented, expected)) {
       return new Response("Unauthorized", { status: 401 });
     }
 
     if (request.method === "PUT") {
-      if (!key) {
-        return new Response("Missing key in path", { status: 400 });
+      if (!isValidKey(key)) {
+        return new Response("Invalid key", { status: 400 });
       }
 
       try {
         const body = request.body;
         if (!body) {
           return new Response("Missing body", { status: 400 });
+        }
+
+        const lenHeader = request.headers.get("Content-Length");
+        const len = lenHeader ? parseInt(lenHeader, 10) : NaN;
+        if (Number.isFinite(len) && len > SIMPLE_PUT_MAX_BYTES) {
+          return new Response("Payload too large", { status: 413 });
         }
 
         await env.BUCKET.put(key, body, {
@@ -40,12 +82,10 @@ export default {
           headers: { "Content-Type": "application/json" },
         });
       } catch (error) {
-        return new Response(`Upload failed: ${error}`, { status: 500 });
+        // Avoid leaking error internals to caller; log to Worker tail instead.
+        console.error("Upload failed:", error);
+        return new Response("Upload failed", { status: 500 });
       }
-    }
-
-    if (request.method === "GET" && key === "health") {
-      return new Response("OK", { status: 200 });
     }
 
     return new Response("Method not allowed. Use PUT to upload.", { status: 405 });

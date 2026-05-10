@@ -1,7 +1,59 @@
 // R2 Uploader Worker - supports small files and multipart for large files
+//
+// SECURITY: All write paths require Bearer auth against the UPLOAD_SECRET
+// Wrangler secret. Set with:
+//   cd workers/r2-uploader && npx wrangler secret put UPLOAD_SECRET
+// Use a 32+ byte random value (e.g. `openssl rand -hex 32`).
+//
+// All keys are validated against an allow-list regex; reads are intentionally
+// not exposed because the public CDN already serves R2 content.
 
 interface Env {
   CDN_BUCKET: R2Bucket;
+  UPLOAD_SECRET: string;
+}
+
+// Allow-listed object key prefixes / extensions. R2 keys are flat strings, so
+// path traversal here means overwriting other prefixes — anchor the regex.
+const KEY_ALLOWLIST =
+  /^(roms|bios|covers|saves)\/[A-Za-z0-9._/-]+\.(chd|cue|bin|zip|z64|n64|v64|sfc|smc|nes|gb|gbc|gba|jpg|jpeg|png|webp|json)$/;
+
+// Hard cap on a single PUT body (multipart parts are independently capped at
+// 5 GiB by R2 itself, this is just for the simple-PUT path).
+const SIMPLE_PUT_MAX_BYTES = 4 * 1024 * 1024 * 1024; // 4 GiB
+
+function isValidKey(key: string): boolean {
+  if (!key || key.length > 512) return false;
+  if (key.includes("..") || key.includes("\0") || key.startsWith("/")) return false;
+  if (key.includes("%2e%2e") || key.includes("%2E%2E")) return false;
+  return KEY_ALLOWLIST.test(key);
+}
+
+function constantTimeEqual(a: string, b: string): boolean {
+  // Reject if either is empty (avoid trivially comparing-equal empty strings).
+  if (!a || !b) return false;
+  // Length differences leak in length comparison itself; that's fine —
+  // we still compare every byte of the shorter side and require lengths match.
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) {
+    diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return diff === 0;
+}
+
+function authorize(request: Request, env: Env): Response | null {
+  const expected = env.UPLOAD_SECRET;
+  if (!expected || expected.length < 16) {
+    // Fail closed when the operator hasn't configured a strong secret.
+    return new Response("Server misconfigured: UPLOAD_SECRET not set", { status: 500 });
+  }
+  const header = request.headers.get("Authorization") || "";
+  const presented = header.startsWith("Bearer ") ? header.slice(7) : "";
+  if (!constantTimeEqual(presented, expected)) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+  return null;
 }
 
 export default {
@@ -9,27 +61,44 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
 
+    // CORS preflight — keep restrictive: only the upload host itself.
+    if (request.method === "OPTIONS") {
+      return new Response(null, {
+        status: 204,
+        headers: {
+          "Access-Control-Allow-Origin": request.headers.get("Origin") || "",
+          "Access-Control-Allow-Methods": "PUT, POST, DELETE",
+          "Access-Control-Allow-Headers": "Authorization, Content-Type",
+          "Access-Control-Max-Age": "600",
+          "Vary": "Origin",
+        },
+      });
+    }
+
+    // Every non-preflight request must authenticate.
+    const authError = authorize(request, env);
+    if (authError) return authError;
+
     // === MULTIPART UPLOAD (for files > 100MB) ===
 
     // Step 1: Create multipart upload
-    // POST /mpu/create/path/to/file.chd
     if (request.method === "POST" && path.startsWith("/mpu/create/")) {
       const key = path.replace("/mpu/create/", "");
-      if (!key) return new Response("Missing key", { status: 400 });
+      if (!isValidKey(key)) return new Response("Invalid key", { status: 400 });
 
       const upload = await env.CDN_BUCKET.createMultipartUpload(key);
       return Response.json({ uploadId: upload.uploadId, key });
     }
 
     // Step 2: Upload part
-    // PUT /mpu/part/path/to/file.chd?uploadId=xxx&part=1
     if (request.method === "PUT" && path.startsWith("/mpu/part/")) {
       const key = path.replace("/mpu/part/", "");
       const uploadId = url.searchParams.get("uploadId");
       const partNum = parseInt(url.searchParams.get("part") || "0");
 
-      if (!key || !uploadId || !partNum) {
-        return new Response("Missing key, uploadId, or part", { status: 400 });
+      if (!isValidKey(key)) return new Response("Invalid key", { status: 400 });
+      if (!uploadId || !partNum) {
+        return new Response("Missing uploadId or part", { status: 400 });
       }
 
       const upload = env.CDN_BUCKET.resumeMultipartUpload(key, uploadId);
@@ -38,15 +107,12 @@ export default {
     }
 
     // Step 3: Complete multipart upload
-    // POST /mpu/complete/path/to/file.chd?uploadId=xxx
-    // Body: {"parts":[{"part":1,"etag":"xxx"},{"part":2,"etag":"yyy"}]}
     if (request.method === "POST" && path.startsWith("/mpu/complete/")) {
       const key = path.replace("/mpu/complete/", "");
       const uploadId = url.searchParams.get("uploadId");
 
-      if (!key || !uploadId) {
-        return new Response("Missing key or uploadId", { status: 400 });
-      }
+      if (!isValidKey(key)) return new Response("Invalid key", { status: 400 });
+      if (!uploadId) return new Response("Missing uploadId", { status: 400 });
 
       const { parts } = await request.json() as { parts: { part: number; etag: string }[] };
       const upload = env.CDN_BUCKET.resumeMultipartUpload(key, uploadId);
@@ -55,14 +121,12 @@ export default {
     }
 
     // Abort multipart upload
-    // DELETE /mpu/abort/path/to/file.chd?uploadId=xxx
     if (request.method === "DELETE" && path.startsWith("/mpu/abort/")) {
       const key = path.replace("/mpu/abort/", "");
       const uploadId = url.searchParams.get("uploadId");
 
-      if (!key || !uploadId) {
-        return new Response("Missing key or uploadId", { status: 400 });
-      }
+      if (!isValidKey(key)) return new Response("Invalid key", { status: 400 });
+      if (!uploadId) return new Response("Missing uploadId", { status: 400 });
 
       const upload = env.CDN_BUCKET.resumeMultipartUpload(key, uploadId);
       await upload.abort();
@@ -71,10 +135,15 @@ export default {
 
     // === SIMPLE UPLOAD (for files < 100MB) ===
 
-    // PUT /path/to/file.ext
     if (request.method === "PUT") {
       const key = path.slice(1);
-      if (!key) return new Response("Missing key", { status: 400 });
+      if (!isValidKey(key)) return new Response("Invalid key", { status: 400 });
+
+      const lenHeader = request.headers.get("Content-Length");
+      const len = lenHeader ? parseInt(lenHeader, 10) : NaN;
+      if (Number.isFinite(len) && len > SIMPLE_PUT_MAX_BYTES) {
+        return new Response("Payload too large; use multipart", { status: 413 });
+      }
 
       await env.CDN_BUCKET.put(key, request.body, {
         httpMetadata: { contentType: request.headers.get("Content-Type") || "application/octet-stream" },
@@ -82,33 +151,19 @@ export default {
       return new Response(`Put ${key} successfully!`);
     }
 
-    // GET /path/to/file.ext
-    if (request.method === "GET" && path !== "/") {
-      const key = path.slice(1);
-      const obj = await env.CDN_BUCKET.get(key);
-      if (!obj) return new Response("Not found", { status: 404 });
-      return new Response(obj.body, {
-        headers: { "Content-Type": obj.httpMetadata?.contentType || "application/octet-stream" },
-      });
-    }
-
-    // DELETE /path/to/file.ext
-    if (request.method === "DELETE") {
-      const key = path.slice(1);
-      if (!key) return new Response("Missing key", { status: 400 });
-      await env.CDN_BUCKET.delete(key);
-      return new Response(`Deleted ${key}`);
-    }
+    // GET intentionally NOT exposed — public CDN serves reads.
+    // DELETE on top-level keys intentionally NOT exposed — use wrangler CLI.
 
     return Response.json({
       usage: {
-        small_files: "PUT /path/to/file (< 100MB)",
+        small_files: "PUT /<allowlisted-key> with Authorization: Bearer <secret> (< 100MB recommended, 4GB hard cap)",
         large_files: {
-          step1: "POST /mpu/create/path/to/file -> {uploadId}",
-          step2: "PUT /mpu/part/path/to/file?uploadId=xxx&part=N (repeat for each 95MB chunk)",
-          step3: "POST /mpu/complete/path/to/file?uploadId=xxx with {parts:[{part,etag}...]}"
-        }
-      }
+          step1: "POST /mpu/create/<key> -> {uploadId}",
+          step2: "PUT /mpu/part/<key>?uploadId=xxx&part=N (95MB chunks)",
+          step3: "POST /mpu/complete/<key>?uploadId=xxx with {parts:[{part,etag}...]}",
+        },
+        notes: "Reads via public CDN; deletes via wrangler CLI.",
+      },
     }, { status: 405 });
   },
 };
