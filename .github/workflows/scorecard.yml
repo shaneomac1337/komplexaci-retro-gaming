@@ -12,17 +12,23 @@ on:
 
 # OpenSSF Scorecard inspects branch protection, dependency update tooling,
 # pinned actions, code review configuration, etc. and publishes a score to
-# the Security tab. Read-only against the repo; needs id-token for OIDC
-# attestation of the SARIF upload.
+# the Security tab.
+#
+# Top-level perms must be minimal — when publish_results: true, the
+# scorecard-action verifies that ONLY the analysis job has the
+# security-events / id-token writes (otherwise it 400s with
+# "global perm is set to write"). Job-level permissions below.
 permissions:
   contents: read
-  security-events: write
-  id-token: write
 
 jobs:
   analysis:
     name: Scorecard analysis
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write   # upload-sarif step
+      id-token: write          # OIDC attestation of the published SARIF
     steps:
       # Audit-mode network egress monitor (consistent with security.yml).
       # Scorecard itself reaches GitHub API + sigstore + various best-practice

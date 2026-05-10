@@ -12,15 +12,20 @@ on:
   # Manual trigger from the Actions tab.
   workflow_dispatch:
 
+# Top-level perms minimal; security-events:write is granted at job-level
+# only on the analyze job that actually uploads SARIF (scorecard's
+# Token-Permissions check warns when a write is at the workflow level).
 permissions:
   contents: read
-  security-events: write
 
 jobs:
   analyze:
     name: Analyze (javascript-typescript)
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: read
+      security-events: write
 
     steps:
       # Audit-mode network egress monitor (consistent with security.yml).
