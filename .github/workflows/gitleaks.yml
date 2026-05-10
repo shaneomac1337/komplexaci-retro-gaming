@@ -5,6 +5,8 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
+  # Manual trigger — handy for ad-hoc re-scans after history rewrites.
+  workflow_dispatch:
 
 permissions:
   contents: read

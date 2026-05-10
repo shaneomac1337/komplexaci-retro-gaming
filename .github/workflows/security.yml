@@ -8,6 +8,9 @@ on:
   schedule:
     # Weekly Monday 06:00 UTC — catches new advisories against pinned deps.
     - cron: '0 6 * * 1'
+  # Manual trigger from the Actions tab — handy for re-running after a
+  # config tweak or after rotating UPLOAD_SECRET, without forcing a commit.
+  workflow_dispatch:
 
 permissions:
   contents: read
