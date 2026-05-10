@@ -4,6 +4,29 @@
  */
 
 import type { ConsoleType } from './console.types';
+import { isConsoleType } from './console.types';
+
+/**
+ * URL schemes allowed for game asset paths (romPath / coverPath).
+ * - https/http: remote CDN
+ * - /relative: local public/ assets
+ * - blob: created by DevRomUploader for local-file dev testing
+ *
+ * Notably blocks `javascript:`, `data:`, `file:`, and other schemes that
+ * could either execute code (javascript:), exfiltrate via data-URI smuggling,
+ * or reach unintended places. games.json sits behind the (authenticated) R2
+ * upload Workers; this validator is defense-in-depth in case a tampered
+ * manifest ever reaches the client.
+ */
+function isSafeAssetUrl(value: string): boolean {
+  if (typeof value !== 'string' || value.length === 0 || value.length > 2048) return false;
+  if (value.startsWith('https://') || value.startsWith('http://')) return true;
+  if (value.startsWith('blob:')) return true;
+  // Relative path (public/ asset). Reject protocol-relative '//evil.com/x'
+  // and Windows-style backslashes.
+  if (value.startsWith('/') && !value.startsWith('//') && !value.includes('\\')) return true;
+  return false;
+}
 
 /**
  * Genre categories for retro games
@@ -169,17 +192,26 @@ export interface GameSearchResult {
 }
 
 /**
- * Type guard to check if an object is a valid Game
+ * Type guard to check if an object is a valid Game.
+ *
+ * Beyond shape checks, this enforces that:
+ * - `console` is a known ConsoleType (not arbitrary string)
+ * - `romPath` is a safe URL scheme (https/http/blob/relative — see
+ *   isSafeAssetUrl); blocks `javascript:` / `data:` / `file:`
+ * - `coverPath`, if present, is also a safe URL scheme
+ *
+ * This is the trust boundary between an attacker-controlled games.json
+ * (gated by the R2 upload Workers' auth) and the React frontend.
  */
 export function isValidGame(obj: unknown): obj is Game {
   if (typeof obj !== 'object' || obj === null) return false;
   const game = obj as Record<string, unknown>;
-  return (
-    typeof game.id === 'string' &&
-    typeof game.title === 'string' &&
-    typeof game.console === 'string' &&
-    typeof game.romPath === 'string'
-  );
+  if (typeof game.id !== 'string' || game.id.length === 0) return false;
+  if (typeof game.title !== 'string' || game.title.length === 0) return false;
+  if (typeof game.console !== 'string' || !isConsoleType(game.console)) return false;
+  if (typeof game.romPath !== 'string' || !isSafeAssetUrl(game.romPath)) return false;
+  if (game.coverPath !== undefined && (typeof game.coverPath !== 'string' || !isSafeAssetUrl(game.coverPath))) return false;
+  return true;
 }
 
 /**

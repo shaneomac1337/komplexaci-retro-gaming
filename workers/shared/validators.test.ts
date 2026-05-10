@@ -70,9 +70,9 @@ describe("isValidKey", () => {
 
   it("rejects empty / non-string", () => {
     expect(isValidKey("")).toBe(false);
-    // @ts-expect-error — defending against runtime misuse
+    // @ts-expect-error -- defending against runtime misuse from JSON parse
     expect(isValidKey(undefined)).toBe(false);
-    // @ts-expect-error
+    // @ts-expect-error -- defending against runtime misuse from JSON parse
     expect(isValidKey(null)).toBe(false);
   });
 
