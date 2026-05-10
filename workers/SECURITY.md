@@ -130,3 +130,26 @@ npx wrangler delete --name komplexaci-upload-proxy
 npm uninstall wrangler
 ```
 
+## Browser response headers
+
+`vercel.json` sets the following defense-in-depth headers on every
+response served from the Vercel edge:
+
+| Header | Value | What it does |
+|---|---|---|
+| `Cross-Origin-Opener-Policy` | `same-origin` | Required for SharedArrayBuffer (EmulatorJS threading); also isolates the browsing context. |
+| `Cross-Origin-Embedder-Policy` | `credentialless` | Same — required for SAB. |
+| `X-Content-Type-Options` | `nosniff` | Prevents browsers from MIME-sniffing responses (defense against script-injection via `Content-Type` confusion). |
+| `Referrer-Policy` | `strict-origin-when-cross-origin` | Don't leak the full URL (incl. query) to third parties. |
+| `Strict-Transport-Security` | `max-age=31536000; includeSubDomains` | Lock the browser to HTTPS for one year. |
+| `Permissions-Policy` | `camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()` | Disable unused powerful APIs by policy. |
+
+A `Content-Security-Policy` is **not** set. EmulatorJS loads JS from
+`cdn.emulatorjs.org`, instantiates WASM from blob URLs, uses inline
+styles, and pulls cores/BIOS/ROM bytes cross-origin. Writing a CSP
+strict enough to add value but lax enough not to break the emulator
+takes careful per-route work (the play page would need a different
+policy than browse/home). If/when added, start with report-only
+(`Content-Security-Policy-Report-Only`) and watch the violations
+before enforcing.
+
