@@ -1,0 +1,29 @@
+version: 2
+updates:
+  # npm — application dependencies
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Prague
+    open-pull-requests-limit: 5
+    # Group non-security patches so we don't get flooded with PRs.
+    # Security advisories ALWAYS get their own PR regardless of group.
+    groups:
+      minor-and-patch:
+        applies-to: version-updates
+        update-types: [minor, patch]
+    labels: [dependencies]
+
+  # GitHub Actions used in .github/workflows/
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Prague
+    open-pull-requests-limit: 3
+    labels: [dependencies, github-actions]
