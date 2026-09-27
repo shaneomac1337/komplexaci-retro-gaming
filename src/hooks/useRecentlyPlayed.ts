@@ -5,7 +5,7 @@
  * Handles play session recording and automatic duration tracking.
  */
 
-import { useCallback, useRef, useEffect } from 'react';
+import { useCallback, useRef, useEffect, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/services/database';
 import type { PlaySession } from '@/services/database';
@@ -176,26 +176,23 @@ export function usePlaySession(
 } {
   const { autoStart = true, onEnd } = options;
 
+  // Refs drive the start/end logic synchronously; state mirrors them so
+  // consumers re-render when the session starts, ticks or ends.
   const sessionIdRef = useRef<number | null>(null);
   const startTimeRef = useRef<Date | null>(null);
-  const durationRef = useRef(0);
+  const [sessionId, setSessionId] = useState<number | null>(null);
+  const [duration, setDuration] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const onEndRef = useRef(onEnd);
+  // Bumped by end(); a start() whose DB write resolves after an end() (e.g.
+  // unmount mid-start, or StrictMode's double-mount) closes its own session
+  // instead of leaving it open forever.
+  const generationRef = useRef(0);
 
   // Keep callback ref updated
   useEffect(() => {
     onEndRef.current = onEnd;
   }, [onEnd]);
-
-  // Live query to get current duration (updates every second via interval)
-  const durationData = useLiveQuery(
-    async () => {
-      if (!startTimeRef.current) return 0;
-      return Math.floor((Date.now() - startTimeRef.current.getTime()) / 1000);
-    },
-    [gameId],
-    0
-  );
 
   const start = useCallback(async () => {
     if (sessionIdRef.current) {
@@ -203,16 +200,24 @@ export function usePlaySession(
       return;
     }
 
+    const generation = generationRef.current;
+
     try {
       const id = await db.startPlaySession(gameId);
+      if (generation !== generationRef.current) {
+        await db.endPlaySession(id);
+        return;
+      }
       sessionIdRef.current = id;
       startTimeRef.current = new Date();
+      setSessionId(id);
+      setDuration(0);
 
       // Start duration update interval
       intervalRef.current = setInterval(() => {
         if (startTimeRef.current) {
-          durationRef.current = Math.floor(
-            (Date.now() - startTimeRef.current.getTime()) / 1000
+          setDuration(
+            Math.floor((Date.now() - startTimeRef.current.getTime()) / 1000)
           );
         }
       }, 1000);
@@ -222,6 +227,8 @@ export function usePlaySession(
   }, [gameId]);
 
   const end = useCallback(async () => {
+    generationRef.current += 1;
+
     if (!sessionIdRef.current) {
       return;
     }
@@ -239,7 +246,8 @@ export function usePlaySession(
     } finally {
       sessionIdRef.current = null;
       startTimeRef.current = null;
-      durationRef.current = 0;
+      setSessionId(null);
+      setDuration(0);
 
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -251,13 +259,14 @@ export function usePlaySession(
   // Auto start/end session
   useEffect(() => {
     if (autoStart) {
+      // start() only sets state after awaiting the DB write — not synchronous.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       start();
     }
 
     return () => {
-      if (sessionIdRef.current) {
-        end();
-      }
+      // Always call end(): it also cancels a start() still awaiting the DB.
+      end();
 
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -266,9 +275,9 @@ export function usePlaySession(
   }, [autoStart, start, end]);
 
   return {
-    isActive: sessionIdRef.current !== null,
-    sessionId: sessionIdRef.current,
-    duration: durationData ?? durationRef.current,
+    isActive: sessionId !== null,
+    sessionId,
+    duration,
     start,
     end,
   };
