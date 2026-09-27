@@ -3,7 +3,7 @@
  * Manage sound effects for UI interactions
  */
 
-import { useCallback, useRef, useEffect } from 'react';
+import { useCallback, useRef, useEffect, useMemo } from 'react';
 
 export interface SoundConfig {
   volume?: number;
@@ -36,25 +36,32 @@ const DEFAULT_SOUNDS: SoundLibrary = {
  */
 export function useSound(customSounds?: SoundLibrary) {
   const audioCache = useRef<Map<string, HTMLAudioElement>>(new Map());
-  const sounds = { ...DEFAULT_SOUNDS, ...customSounds };
+  // Key on contents, not identity, so an inline customSounds object doesn't
+  // tear down and re-download every Audio element on each render.
+  const customKey = JSON.stringify(customSounds ?? {});
+  const sounds = useMemo<SoundLibrary>(
+    () => ({ ...DEFAULT_SOUNDS, ...JSON.parse(customKey) }),
+    [customKey]
+  );
 
   // Preload audio files
   useEffect(() => {
+    const cache = audioCache.current;
     Object.entries(sounds).forEach(([key, path]) => {
-      if (!audioCache.current.has(key)) {
+      if (!cache.has(key)) {
         const audio = new Audio(path);
         audio.preload = 'auto';
-        audioCache.current.set(key, audio);
+        cache.set(key, audio);
       }
     });
 
     // Cleanup
     return () => {
-      audioCache.current.forEach((audio) => {
+      cache.forEach((audio) => {
         audio.pause();
         audio.src = '';
       });
-      audioCache.current.clear();
+      cache.clear();
     };
   }, [sounds]);
 

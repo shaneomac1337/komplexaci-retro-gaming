@@ -61,6 +61,15 @@ export function useLocalStorage<T>(
 
   const [storedValue, setStoredValue] = useState<T>(readValue);
 
+  // Re-read when the key changes. Done during render (React's "adjust state
+  // on prop change" pattern) rather than in an effect, avoiding an extra
+  // render — and a render loop when initialValue is an inline object.
+  const [prevKey, setPrevKey] = useState(key);
+  if (key !== prevKey) {
+    setPrevKey(key);
+    setStoredValue(readValue());
+  }
+
   /**
    * Set value in state and localStorage
    */
@@ -150,11 +159,6 @@ export function useLocalStorage<T>(
       window.removeEventListener('storage', handleStorageChange);
     };
   }, [key, initialValue]);
-
-  // Sync on mount in case value changed while component was unmounted
-  useEffect(() => {
-    setStoredValue(readValue());
-  }, [readValue]);
 
   return [storedValue, setValue, removeValue];
 }

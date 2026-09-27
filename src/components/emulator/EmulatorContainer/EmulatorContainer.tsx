@@ -78,6 +78,16 @@ function EmulatorContainerComponent({
   const [loadProgress, setLoadProgress] = useState(0);
   const [showCustomLoader, setShowCustomLoader] = useState(true);
 
+  // Reset the loader during render when a new game loads or on retry, so the
+  // previous attempt's progress never flashes for a frame.
+  const loadKey = `${game.id}:${retryCount}`;
+  const [prevLoadKey, setPrevLoadKey] = useState(loadKey);
+  if (loadKey !== prevLoadKey) {
+    setPrevLoadKey(loadKey);
+    setShowCustomLoader(true);
+    setLoadProgress(0);
+  }
+
   // Track if loading has been completed to prevent duplicate handling
   // This is needed because EJS_startOnLoaded may cause onGameStart to fire without onReady
   const hasCompletedLoadingRef = useRef(false);
@@ -146,9 +156,6 @@ function EmulatorContainerComponent({
   useEffect(() => {
     if (!game) return;
 
-    // Reset loading state
-    setShowCustomLoader(true);
-    setLoadProgress(0);
     hasCompletedLoadingRef.current = false; // Reset completion flag for new game
 
     loadGame(game);
