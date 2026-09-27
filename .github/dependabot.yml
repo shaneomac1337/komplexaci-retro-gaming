@@ -15,6 +15,10 @@ updates:
       minor-and-patch:
         applies-to: version-updates
         update-types: [minor, patch]
+    ignore:
+      # Keep @types/node on the runtime major (CI runs Node 24).
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
     labels: [dependencies]
 
   # GitHub Actions used in .github/workflows/
