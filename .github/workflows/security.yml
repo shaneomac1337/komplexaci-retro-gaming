@@ -66,7 +66,7 @@ jobs:
         run: npx tsc --noEmit -p tsconfig.app.json
       - name: Worker typecheck
         run: |
-          npx tsc --noEmit \
+          npx tsc --noEmit --ignoreConfig \
             --types @cloudflare/workers-types \
             --target es2022 --module esnext --moduleResolution bundler \
             --strict --skipLibCheck \
