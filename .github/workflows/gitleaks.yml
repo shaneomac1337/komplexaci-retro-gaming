@@ -23,7 +23,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
         with:
           # Need full history so gitleaks can scan commit ranges and
           # produce useful findings on PRs.
@@ -31,6 +31,9 @@ jobs:
 
       - uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7  # v2.3.9
         env:
+          # Required by gitleaks-action v2 on pull_request events (it lists
+          # the PR's commits via the API); without it every PR scan fails.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # By default the action scans only the diff for the current
           # event (push or PR), so historical false-positives like the
           # already-rotated `komplexaci-upload-2024` won't keep firing.

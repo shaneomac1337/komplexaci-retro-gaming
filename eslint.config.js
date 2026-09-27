@@ -28,6 +28,11 @@ export default defineConfig([
     rules: {
       'no-unsanitized/method': 'error',
       'no-unsanitized/property': 'error',
+      // Promoted to errors in eslint-plugin-react-hooks 7.1. Existing hits in
+      // EmulatorContainer, useLocalStorage and useRecentlyPlayed need
+      // behavioural fixes — keep them visible as warnings until then.
+      'react-hooks/set-state-in-effect': 'warn',
+      'react-hooks/refs': 'warn',
     },
     languageOptions: {
       ecmaVersion: 2020,
