@@ -10,13 +10,14 @@ import { CONSOLE_CONFIG } from '@/types';
 import type { Game, ConsoleType, EmulatorCore } from '@/types';
 
 /**
- * CDN base URL for EmulatorJS assets.
- * Using 'nightly' because the 'latest'/'stable' mednafen_psx_hw build (2025-06-14)
- * aborts in WASM with no diagnostics; nightly carries a 2026-02-04 build that
- * actually loads PSX content. Trade-off: nightly may include unstable frontend
- * changes — pin to a tagged release if regressions show up.
+ * CDN base URL for EmulatorJS assets, pinned to a tagged release so cores
+ * can't change underneath us. The 'nightly' channel's July 2026 core rebuild
+ * broke parallel_n64 (aborts at boot: emscripten_fiber_swap without async
+ * support); 4.3.0-pre has the same problem. 4.2.3 runs every game in
+ * games.json (PS1 via pcsx_rearmed, N64 via parallel_n64). Re-test all games
+ * before bumping.
  */
-const CDN_BASE_URL = 'https://cdn.emulatorjs.org/nightly/data/';
+const CDN_BASE_URL = 'https://cdn.emulatorjs.org/4.2.3/data/';
 
 /**
  * Global flag to track if EmulatorJS script has been loaded
@@ -422,6 +423,10 @@ export function useEmulator(
           'video_hard_sync': 'disabled',
           'video_max_swapchain_images': '2',
           'pcsx_rearmed_show_bios_bootlogo': 'enabled',
+          // Load the WebGL2 core build. Otherwise EmulatorJS falls back to the
+          // core report's defaultWebGL2, which parallel_n64 doesn't set, and
+          // picks the "-legacy" WebGL1 build.
+          'webgl2Enabled': 'enabled',
         };
 
         // Disable mouse/pointer lock - most retro games don't need it
