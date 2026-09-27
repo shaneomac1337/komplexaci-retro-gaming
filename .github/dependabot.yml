@@ -30,4 +30,9 @@ updates:
       time: "06:00"
       timezone: Europe/Prague
     open-pull-requests-limit: 3
+    groups:
+      # init/autobuild/analyze/upload-sarif must stay on the same version;
+      # bumped separately, a lone `analyze` bump breaks the CodeQL job.
+      codeql-action:
+        patterns: ["github/codeql-action*"]
     labels: [dependencies, github-actions]
